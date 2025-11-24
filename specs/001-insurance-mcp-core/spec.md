@@ -246,8 +246,11 @@ class SurrenderLogicResult:
     - **采集层 (Acquisition)**: 基于元数据，从保险公司官网下载 PDF 实体文件。
     
 - **FR-004**: 系统必须实现高保真 **PDF 转 Markdown** 转换管道：
-    - 支持**版面分析 (Layout Analysis)**，正确还原双栏排版文档的阅读顺序。
-    - 具备**表格还原能力**，能将简单的费率表、利益演示表转换为 Markdown 表格，保持行列结构不崩坏。
+    - **核心引擎**: 采用 **Docling** (v2.0+) 作为解析引擎，实现从"文本流提取"到"文档对象模型 (DOM) 提取"的升级。
+    - **版面分析**: 利用 Docling 内置能力正确处理多栏排版，确保阅读顺序准确率 ≥ 98%。
+    - **表格处理**: 
+        - **普通表格**: 转换为标准 Markdown 表格，保持行列结构。
+        - **费率表分离**: 识别密集数值型表格（费率表），将其序列化为 CSV/JSON 存储于独立目录 (`assets/tables/`)，不进入向量索引，仅在 Metadata 中保留引用。
     
 **数据清洗与优化**（后处理步骤）:
 
@@ -292,70 +295,42 @@ class SurrenderLogicResult:
 
 - **FR-009**: 语义感知切片策略 (Semantic-Aware Chunking)
 
-系统必须实现基于保险条款语义结构的切片策略，确保逻辑完整性：
+系统必须实现基于 Markdown 标题层级的智能切片策略，确保上下文完整性：
 
-- **切片方法**: 使用 Markdown 标题层级进行语义切分（MarkdownHeaderSplitter 或等价实现）：
-  - **Level 1 (#)**: 保险产品名称（作为根节点）
-  - **Level 2 (##)**: 大章节（如"1. 我们保什么、保多久"、"2. 我们不保什么"）
-  - **Level 3 (###)**: 具体条款（如"1.2 保险责任"、"2.1 责任免除"）
-  - **Level 4以下**: 子条款细节
+- **切片方法**:
+  - 基于 Docling 生成的结构化 Markdown 进行切分。
+  - **层级保留**: 完整保留 # (Level 1), ## (Level 2), ### (Level 3) 层级结构。
 
 - **切片原则**:
-  1. **逻辑完整性**: 一个完整的条款（如"1.2.6 身故保险金"）不得跨多个chunk切分
-  2. **上下文保留**: 每个chunk包含其父级标题作为上下文（如chunk包含"1.2.6"时，也应包含"1.2"和"1"的标题）
-  3. **大小控制**: 
-     - 目标chunk大小为 512-1024 tokens
-     - **重叠策略**: 相邻chunk间保留20%重叠区域，具体规则：
-       - 从前一个chunk的末尾取最后 100-200 tokens
-       - 将这些tokens作为下一个chunk的开头上下文
-       - 示例：Chunk A末尾为"...保险金给付条件为..."，Chunk B开头应包含"保险金给付条件为..."
-     - 重叠的目的是保留上下文连贯性，防止关键信息在边界处断裂
-     - **超出范围时**: 优先保持逻辑完整性，允许chunk最大扩展到2048 tokens；超过则在子条款层级强制切分
-  4. **表格保护**: 表格必须作为独立chunk存储，或转换为JSON结构保存在metadata中（详见FR-009a）
+  1. **逻辑完整性**: 一个完整的条款不得跨多个 chunk 切分。
+  2. **面包屑路径 (Breadcrumb Path)**: 每个 chunk 必须包含完整的章节路径（如 `保险责任 > 重大疾病保险金 > 给付条件`），存储于 `section_path` 字段。
+  3. **父级上下文**: 在 chunk 内容头部显式添加父级章节描述。
+  4. **大小控制**: 目标 512-1024 tokens，保留 128 tokens 重叠。
+  5. **表格保护**: (见 FR-009a)
 
 - **实施要求**:
-  - 使用 LangChain 的 `MarkdownHeaderTextSplitter` 或自实现等价逻辑
-  - 保留原始Markdown的标题层级结构
-  - 为每个chunk生成唯一的 `section_id`（如"1.2.6"）
+  - 实现 `MarkdownChunker`，支持层级感知。
+  - 自动生成并注入 `section_path`。
 
 ---
 
-- **FR-009a**: 表格完整性保护 (Table Integrity Protection)
+- **FR-009a**: 表格完整性与分离策略 (Table Integrity & Separation)
 
-系统必须严格保护保险条款中的表格结构（如减额交清表、费率表、利益演示表），防止行列关系崩坏：
+系统必须区分处理"普通表格"和"费率表格"，以优化检索体验：
 
-- **强制规则**:
-  1. **独立chunk存储**: 任何表格必须作为独立的chunk存储，不得与表格前后的文本合并切分
-  2. **JSON备份**: 除Markdown表格格式外，同时将表格转换为JSON结构存储在chunk的 `table_data` metadata中
-  3. **完整性标记**: 使用 `is_table: true` 标记表格chunk，便于检索时特殊处理
+- **表格分类**:
+  - **费率表 (Rate Table)**: 包含"年龄"、"保费"、"费率"等列，数值密集。
+  - **普通表 (Ordinary Table)**: 文本为主，如"保障列表"、"疾病定义"。
 
-- **JSON结构示例**:
-  ```json
-  {
-    "table_type": "减额交清对比表",
-    "headers": ["保单年度", "减额后年金领取金额", "备注"],
-    "rows": [
-      ["第5年", "1000元/年", "从第6年开始领取"],
-      ["第10年", "1500元/年", "终身领取"]
-    ],
-    "row_count": 2,
-    "column_count": 3
-  }
-  ```
+- **处理策略**:
+  1. **普通表**: 转换为 Markdown 表格，随文本一同向量化。
+  2. **费率表**: 
+     - **序列化**: 导出为 CSV 或 JSON 格式。
+     - **存储**: 保存至 `assets/tables/` 目录。
+     - **引用**: 在 PolicyChunk 中仅保留 `table_refs` (指向表格UUID)，**不进行向量化**，防止数值噪音干扰语义检索。
   
-  **字段说明**:
-  - `table_type`: 表格类型/标题（用于语义检索）
-  - `headers`: 表头列表
-  - `rows`: 数据行列表（每行为一个数组）
-  - `row_count`: 行数（自动计算，用于完整性验证）
-  - `column_count`: 列数（自动计算，用于完整性验证）
-
-- **检索优化**: 表格chunk的语义检索应同时考虑：
-  - 表格标题（如"减额交清对比表"）
-  - 表格内的数值和关键词（如"减额"、"年金"）
-  - 表格的上下文说明（表格前后的段落）
-
-**合规性**: 此规则直接响应 Constitution 3.2 ("表格必须转换为标准的 Markdown 表格或保留语义的结构化文本，严禁破坏表格的行列对应关系")。
+- **检索优化**:
+  - 针对费率查询（Text-to-SQL 准备），后续阶段将基于 CSV 进行精确查询。
 
 ---
 
@@ -468,6 +443,7 @@ class SurrenderLogicResult:
   - 核心属性：`id`, `document_id`, `content`, `embedding_vector`
   - 结构化元数据（新增/增强）：
     - `section_id`: 条款编号（如"1.2.6"）
+    - `section_path`: **[新增]** 完整章节路径（如"保险责任 > 重疾 > 给付条件"）
     - `section_title`: 条款标题（如"身故保险金"）
     - `category`: 条款类型（Liability/Exclusion/Process/Definition）
     - `entity_role`: 主体角色（Insurer/Insured/Beneficiary）
@@ -477,7 +453,8 @@ class SurrenderLogicResult:
     - `chunk_index`: 文档内顺序
     - `keywords`: 关键词提取
     - `is_table`: 是否为表格
-    - `table_data`: 表格JSON结构（仅表格chunk）
+    - `table_refs`: **[新增]** 关联的费率表UUID列表（仅当表格被分离时）
+    - `table_data`: 表格JSON结构（仅普通表格chunk）
 
 ## 成功标准 (Success Criteria)
 

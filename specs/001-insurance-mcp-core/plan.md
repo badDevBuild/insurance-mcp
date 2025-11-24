@@ -17,7 +17,8 @@
 - `mcp`: Model Context Protocol SDK
 - `playwright`: 动态网页爬虫 (发现层)
 - `scrapy`: 高并发下载 (采集层)
-- `pdfplumber` / `paddleocr`: PDF 解析与 OCR
+- `docling`: **[New]** 高保真 PDF 解析引擎 (v2.0+)
+- `pdfplumber` / `paddleocr`: PDF 解析与 OCR (Legacy)
 - `chromadb`: 向量数据库
 - `FlagEmbedding`: BGE中文Embedding模型 (BAAI/bge-small-zh-v1.5)
 - `typer`: CLI 工具
@@ -65,10 +66,13 @@ src/
 │   ├── acquisition/        # 采集层 (Scrapy/Aiohttp)
 │   └── pipelines/          # 数据管道
 ├── parser/                 # 解析模块
-│   ├── layout/             # 版面分析
-│   ├── ocr/                # OCR 集成
-│   └── markdown/           # Markdown 生成
+│   ├── layout/             # 版面分析 (Legacy)
+│   ├── ocr/                # OCR 集成 (Legacy)
+│   └── markdown/           # Markdown 生成 (Legacy)
 ├── indexing/               # 索引模块
+│   ├── parsers/            # **[New]** 结构化解析器 (Docling)
+│   ├── analyzers/          # **[New]** 文档分析器 (费率表分类)
+│   ├── chunkers/           # **[New]** 智能切片器 (Markdown感知)
 │   ├── vector_store/       # ChromaDB 适配
 │   └── embedding/          # BGE Embedding (本地模型)
 ├── mcp_server/             # MCP 服务端

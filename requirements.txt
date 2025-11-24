@@ -21,3 +21,6 @@ jieba>=0.42.1         # 中文分词
 langchain>=1.0.0      # MarkdownHeaderTextSplitter
 tenacity>=8.2.0       # 重试机制
 
+# 第六阶段新增依赖 (Docling Integration)
+docling>=2.0.0        # 高保真 PDF 解析
+

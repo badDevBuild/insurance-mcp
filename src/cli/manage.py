@@ -351,29 +351,36 @@ def process_postprocess(
 def index_rebuild(
     reset: bool = typer.Option(False, "--reset", help="先清空现有索引"),
     enable_bm25: bool = typer.Option(True, "--enable-bm25/--no-bm25", help="是否构建BM25索引"),
+    use_docling: bool = typer.Option(True, "--use-docling/--no-docling", help="是否使用Docling解析PDF (Phase 6)"),
 ):
     """
     重建向量索引
     
     从所有VERIFIED文档重新构建ChromaDB和BM25索引。
     
+    Phase 6 增强:
+    - --use-docling: 使用Docling高精度PDF解析（默认）
+    - --no-docling: 使用Legacy Markdown模式
+    
     示例:
-    - python -m src.cli.manage index rebuild
+    - python -m src.cli.manage index rebuild --use-docling
     - python -m src.cli.manage index rebuild --reset
-    - python -m src.cli.manage index rebuild --no-bm25
+    - python -m src.cli.manage index rebuild --no-bm25 --no-docling
     """
     setup_logging()
     
     from src.indexing.indexer import create_indexer
     from src.indexing.vector_store.hybrid_retriever import BM25Index
     
-    typer.echo("\n🔧 准备重建索引...\n")
+    typer.echo("\n🔧 准备重建索引...")
+    typer.echo(f"模式: {'Docling (PDF直接解析)' if use_docling else 'Legacy (Markdown)'}")
+    typer.echo(f"BM25索引: {'启用' if enable_bm25 else '禁用'}\n")
     
     # 创建BM25索引（如果启用）
     bm25_index = BM25Index() if enable_bm25 else None
     
     # 创建索引器
-    indexer = create_indexer(bm25_index=bm25_index)
+    indexer = create_indexer(bm25_index=bm25_index, use_docling=use_docling)
     
     # 重建索引
     try:
@@ -507,6 +514,131 @@ def index_test_search(
         
     except Exception as e:
         console.print(f"\n[red]❌ 检索失败: {e}[/red]\n")
+        raise typer.Exit(code=1)
+
+
+@index_app.command("tables")
+def index_tables(
+    list_all: bool = typer.Option(False, "--list", help="列出所有导出的费率表"),
+    product_code: Optional[str] = typer.Option(None, "--product", help="按产品代码过滤"),
+    table_id: Optional[str] = typer.Option(None, "--show", help="显示指定表格的详细信息"),
+):
+    """
+    管理导出的费率表
+    
+    Phase 6 新增功能：查看和管理Docling分离的费率表。
+    
+    示例:
+    - python -m src.cli.manage index tables --list
+    - python -m src.cli.manage index tables --list --product 5004
+    - python -m src.cli.manage index tables --show <table_uuid>
+    """
+    setup_logging()
+    
+    from src.indexing.analyzers.table_serializer import TableSerializer
+    from rich.console import Console
+    from rich.table import Table as RichTable
+    from pathlib import Path
+    import json
+    import csv
+    
+    console = Console()
+    serializer = TableSerializer()
+    
+    if list_all:
+        # 列出所有费率表
+        console.print("\n📋 已导出的费率表\n")
+        
+        try:
+            metadata = serializer._load_metadata()
+            
+            if not metadata:
+                console.print("[yellow]暂无导出的费率表[/yellow]\n")
+                return
+            
+            # 过滤
+            if product_code:
+                metadata = {k: v for k, v in metadata.items() if v.get('product_code') == product_code}
+            
+            # 创建表格
+            table = RichTable(title=f"费率表列表 ({len(metadata)} 张)")
+            table.add_column("UUID", style="cyan")
+            table.add_column("产品代码", style="green")
+            table.add_column("源PDF", style="blue")
+            table.add_column("页码", style="magenta")
+            table.add_column("行数", style="yellow")
+            table.add_column("列数", style="yellow")
+            
+            for table_id, info in metadata.items():
+                table.add_row(
+                    table_id[:8] + "...",
+                    info.get('product_code', 'N/A'),
+                    Path(info.get('source_pdf', '')).name if info.get('source_pdf') else 'N/A',
+                    str(info.get('page_number', 'N/A')),
+                    str(info.get('row_count', 'N/A')),
+                    str(info.get('col_count', 'N/A'))
+                )
+            
+            console.print(table)
+            console.print(f"\n📁 存储位置: {serializer.export_dir}\n")
+            
+        except Exception as e:
+            console.print(f"\n[red]❌ 加载元数据失败: {e}[/red]\n")
+            raise typer.Exit(code=1)
+    
+    elif table_id:
+        # 显示单个表格详情
+        console.print(f"\n🔍 费率表详情: {table_id}\n")
+        
+        try:
+            metadata = serializer._load_metadata()
+            
+            if table_id not in metadata:
+                console.print(f"[red]❌ 未找到表格: {table_id}[/red]\n")
+                raise typer.Exit(code=1)
+            
+            info = metadata[table_id]
+            
+            # 显示元数据
+            console.print(f"[bold]产品代码:[/bold] {info.get('product_code', 'N/A')}")
+            console.print(f"[bold]源PDF:[/bold] {info.get('source_pdf', 'N/A')}")
+            console.print(f"[bold]页码:[/bold] {info.get('page_number', 'N/A')}")
+            console.print(f"[bold]表格类型:[/bold] {info.get('table_type', 'N/A')}")
+            console.print(f"[bold]行数:[/bold] {info.get('row_count', 'N/A')}")
+            console.print(f"[bold]列数:[/bold] {info.get('col_count', 'N/A')}")
+            console.print(f"[bold]创建时间:[/bold] {info.get('created_at', 'N/A')}")
+            console.print(f"\n[bold]表头:[/bold] {', '.join(info.get('headers', []))}")
+            
+            # 显示CSV预览
+            csv_path = serializer.export_dir / info['csv_path']
+            if csv_path.exists():
+                console.print(f"\n[bold]CSV预览:[/bold] (top 5 rows)")
+                
+                with open(csv_path, 'r', encoding='utf-8') as f:
+                    reader = csv.reader(f)
+                    rows = list(reader)
+                    
+                    preview_table = RichTable()
+                    
+                    # 表头
+                    if rows:
+                        for header in rows[0]:
+                            preview_table.add_column(header, style="cyan")
+                        
+                        # 数据行 (top 5)
+                        for row in rows[1:6]:
+                            preview_table.add_row(*row)
+                    
+                    console.print(preview_table)
+                    console.print(f"\n📄 完整CSV: {csv_path}\n")
+            else:
+                console.print(f"\n[yellow]⚠️  CSV文件不存在: {csv_path}[/yellow]\n")
+            
+        except Exception as e:
+            console.print(f"\n[red]❌ 加载表格失败: {e}[/red]\n")
+            raise typer.Exit(code=1)
+    else:
+        console.print("\n[yellow]请指定 --list 或 --show 参数[/yellow]\n")
         raise typer.Exit(code=1)
 
 

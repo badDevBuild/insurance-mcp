@@ -93,15 +93,48 @@ python -m src.cli.verify reject 067afcfc -r "表格错误"
 python -m src.cli.verify stats
 ```
 
-#### 4. 向量检索（待实施 ⏳）
+#### 4. 向量检索（已实现 ✅）
+
+索引VERIFIED文档并提供语义检索：
 
 ```bash
-# 索引已审核文档
-python -m src.cli.manage index --rebuild
+# 索引已审核文档（Docling模式）
+python -m src.cli.manage index rebuild --use-docling
 
+# Legacy模式（使用Markdown）
+python -m src.cli.manage index rebuild --no-docling
+
+# 测试检索
+python -m src.cli.manage index test-search "保险期间多久"
+
+# 查看索引统计
+python -m src.cli.manage index stats
+
+# 查看导出的费率表
+python -m src.cli.manage index tables --list
+```
+
+**特性**：
+- 🧠 BGE-M3 中文嵌入（768维）
+- 🔍 混合检索（Dense Vector + BM25）
+- 📊 Docling 高精度PDF解析
+- 📄 费码表自动分离导出CSV
+- 🧵 章节面包屑路径
+
+#### 5. MCP 服务（已实现 ✅）
+
+启动MCP服务器为AI客户端提供服务：
+
+```bash
 # 启动MCP服务器
 python -m src.mcp_server.server
 ```
+
+**可用工具**：
+- `search_policy_clause`: 语义条款检索
+- `check_exclusion_risk`: 免责条款核查
+- `calculate_surrender_value_logic`: 退保/减额交清逻辑提取
+- `lookup_product`: 产品查询
 
 ### 详细文档
 
@@ -127,23 +160,31 @@ python -m src.mcp_server.server
 - 实现QPS限流器（Token Bucket + Circuit Breaker）
 - 实现完整采集pipeline
 
-### 第四阶段：PDF处理 ✅ ← **最新**
+### 第四阶段：PDF处理 ✅
 - 实现PDF→Markdown转换器（markitdown）
 - 实现PDF版面分析器（pdfplumber）
 - 实现审核员CLI工具
 - 完成人工审核工作流
 
-### 第五阶段：向量检索 ⏳
-- Markdown文本切分（chunking）
-- Embedding生成
-- ChromaDB向量存储
-- 语义检索接口
+### 第五阶段：向量检索 ✅
+- BGE-M3 中文嵌入（768维）
+- 混合检索（Dense Vector + BM25 + RRF）
+- 智能元数据提取（category, keywords）
+- ChromaDB 向量存储
+- Markdown 后处理 Pipeline
 
-### 第六阶段：MCP服务 ⏳
+### 第六阶段：Docling 集成 ✅ ← **最新**
+- Docling 高精度PDF解析（多栏识别）
+- 费率表自动分离导出CSV
+- 章节面包屑路径（breadcrumb）
+- 双模式架构（Docling/Legacy）
+- 单元测试 + 集成测试全部通过
+
+### 第七阶段：MCP服务 ✅
 - MCP服务器实现
-- Tool定义（query_policy等）
-- Claude Desktop集成
-- 生产环境部署
+- 4个专业工具（search_clause, check_exclusion, surrender_logic, lookup_product）
+- 支持产品范围过滤
+- Claude Desktop 可集成
 
 ---
 
@@ -151,18 +192,20 @@ python -m src.mcp_server.server
 
 基于深度研究报告《保险文档智能处理全流程架构》，我们制定了四阶段改进路线图：
 
-### 📍 当前阶段：Phase 1 - 高保真结构化解析重构
+### 🏆 已完成：Phase 6 - Docling 集成与结构化解析重构
 
 **目标**: 将现有的"文本流提取"升级为"文档对象模型（DOM）提取"
 
-**核心技术**: Docling (IBM开源)
+**核心技术**: Docling v2.63.0 (IBM开源)
 
-**预期效果**:
-- ✅ 表格还原准确率 ≥95%
-- ✅ 阅读顺序准确率 ≥98%
-- ✅ 费率查询准确率 100%
+**实际效果** ✅:
+- ✅ 表格结构完整保留
+- ✅ 阅读顺序自动修复（多栏支持）
+- ✅ 费率表自动识别并导出 CSV
+- ✅ 章节面包屑路径注入
+- ✅ 单元测试 + 集成测试 100% 通过
 
-**时间表**: 11-14个工作日
+**完成时间**: 2025-11-24
 
 ### 🗺️ 完整路线图
 

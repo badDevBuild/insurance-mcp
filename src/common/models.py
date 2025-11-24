@@ -104,6 +104,7 @@ class PolicyChunk(BaseModel):
     
     # 结构化元数据（新增/增强）
     section_id: str = Field(..., description="条款编号，如'1.2.6'")
+    section_path: Optional[str] = Field(None, description="完整章节路径（面包屑），如'保险责任 > 重疾 > 给付条件'")
     section_title: str = Field(..., description="条款标题，如'身故保险金'")
     category: ClauseCategory = Field(
         default=ClauseCategory.GENERAL,
@@ -123,6 +124,7 @@ class PolicyChunk(BaseModel):
     # 表格专用字段
     is_table: bool = Field(default=False, description="是否为表格chunk")
     table_data: Optional[TableData] = Field(None, description="表格JSON结构")
+    table_refs: List[str] = Field(default_factory=list, description="关联的费率表UUID列表（仅当表格被分离时）")
     
     # 时间戳
     created_at: datetime = Field(default_factory=datetime.now)
@@ -163,7 +165,7 @@ class PolicyChunk(BaseModel):
         if hasattr(category_val, 'value'):
             category_val = category_val.value
             
-        metadata = {
+            metadata = {
             "document_id": self.document_id,
             # 产品上下文
             "company": self.company,
@@ -178,6 +180,10 @@ class PolicyChunk(BaseModel):
             "chunk_index": self.chunk_index,
             "is_table": self.is_table,
         }
+        
+        # 新增: section_path
+        if self.section_path:
+            metadata["section_path"] = self.section_path
         
         # 可选字段
         if self.entity_role:
@@ -200,6 +206,10 @@ class PolicyChunk(BaseModel):
             import json
             # Use model_dump() for Pydantic V2
             metadata["table_data"] = json.dumps(self.table_data.model_dump())
+            
+        # table_refs作为字符串存储
+        if self.table_refs:
+            metadata["table_refs"] = ",".join(self.table_refs)
         
         # ChromaDB不接受None值,过滤掉所有None
         metadata = {k: v for k, v in metadata.items() if v is not None}
@@ -223,6 +233,11 @@ class PolicyChunk(BaseModel):
         if metadata.get("table_data"):
             table_data = TableData(**json.loads(metadata["table_data"]))
         
+        # Deserialize table_refs
+        table_refs = []
+        if "table_refs" in metadata and metadata["table_refs"]:
+            table_refs = metadata["table_refs"].split(",")
+            
         return cls(
             id=chroma_result["ids"][0],
             document_id=metadata.get("document_id", ""),
@@ -235,6 +250,7 @@ class PolicyChunk(BaseModel):
             content=chroma_result["documents"][0],
             embedding_vector=chroma_result.get("embeddings", [None])[0],
             section_id=metadata.get("section_id", ""),
+            section_path=metadata.get("section_path"),
             section_title=metadata.get("section_title", ""),
             category=metadata.get("category", "General"),
             entity_role=metadata.get("entity_role"),
@@ -244,7 +260,8 @@ class PolicyChunk(BaseModel):
             chunk_index=metadata.get("chunk_index", 0),
             keywords=keywords,
             is_table=metadata.get("is_table", False),
-            table_data=table_data
+            table_data=table_data,
+            table_refs=table_refs
         )
 
 # Helper函数
