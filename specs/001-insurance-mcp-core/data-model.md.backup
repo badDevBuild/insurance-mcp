@@ -1,0 +1,109 @@
+# 数据模型：保险 MCP 核心平台
+
+**功能分支**: `001-insurance-mcp-core`
+**最后更新**: 2025-11-21
+**第一期范围**: 仅支持平安人寿公司数据，company 字段固定为 "平安人寿"
+
+## 实体关系图 (概念)
+
+```mermaid
+erDiagram
+    Product ||--o{ PolicyDocument : "has"
+    PolicyDocument ||--o{ PolicyChunk : "contains"
+    
+    Product {
+        string id PK "UUID"
+        string name "产品名称"
+        string company "保险公司名称 (第一期固定为平安人寿)"
+        string product_code "产品代码"
+        string category "人寿/财产/健康"
+        string status "在售/停售"
+    }
+
+    PolicyDocument {
+        string id PK "UUID"
+        string product_id FK
+        string doc_type "文档类型(产品条款/费率表等)"
+        string filename "原始文件名"
+        string local_path "存储的 PDF 路径"
+        string url "来源 URL"
+        string file_hash "SHA-256"
+        integer file_size "文件大小(字节)"
+        datetime downloaded_at
+        enum verification_status "PENDING, VERIFIED, REJECTED"
+        string auditor_notes "驳回原因"
+        json pdf_links "所有PDF链接(可追溯)"
+    }
+
+    PolicyChunk {
+        string id PK "UUID"
+        string document_id FK
+        string content "文本内容"
+        json metadata "页码, 章节标题"
+        vector embedding "1536d float32"
+    }
+```
+
+## 模式定义
+
+### SQLite 模式 (元数据存储)
+
+```sql
+CREATE TABLE products (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    company TEXT NOT NULL DEFAULT '平安人寿', -- 第一期固定为平安人寿
+    product_code TEXT UNIQUE, -- 产品代码，用于去重
+    category TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE policy_documents (
+    id TEXT PRIMARY KEY,
+    product_id TEXT,
+    doc_type TEXT NOT NULL, -- 文档类型：产品条款、费率表、说明书等
+    filename TEXT NOT NULL,
+    local_path TEXT NOT NULL,
+    url TEXT,
+    file_hash TEXT, -- SHA-256哈希，用于去重
+    file_size INTEGER, -- 文件大小（字节）
+    downloaded_at TIMESTAMP,
+    verification_status TEXT DEFAULT 'PENDING', -- PENDING, VERIFIED, REJECTED
+    auditor_notes TEXT,
+    markdown_content TEXT, -- 解析后的内容 (分块前)
+    pdf_links TEXT, -- JSON格式存储所有PDF链接，用于来源追溯 {"产品条款": "url1", "费率表": "url2"}
+    FOREIGN KEY(product_id) REFERENCES products(id)
+);
+
+-- 索引优化
+CREATE INDEX IF NOT EXISTS idx_doc_product ON policy_documents(product_id);
+CREATE INDEX IF NOT EXISTS idx_doc_status ON policy_documents(verification_status);
+CREATE INDEX IF NOT EXISTS idx_doc_hash ON policy_documents(file_hash);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_doc_unique ON policy_documents(product_id, doc_type, url);
+
+-- 分块存储在 ChromaDB 中，但在概念上进行映射
+-- ChromaDB Metadata: { "document_id": "...", "page": 1, "section": "..." }
+```
+
+## 数据目录结构
+
+```text
+data/
+├── db/
+│   └── metadata.sqlite      # SQLite 数据库
+├── raw/
+│   └── 平安人寿/             # 第一期：平安人寿公司目录（使用中文公司名）
+│       └── {product_code}/  # 按产品代码组织
+│           ├── 产品条款.pdf
+│           ├── 费率表.pdf
+│           ├── 产品说明书.pdf
+│           └── ... (其他文档)
+├── processed/
+│   └── {document_id}.md     # 已核验的 Markdown 文件
+└── vector_store/            # ChromaDB 持久化文件
+
+注：
+- 第一期使用中文公司名作为目录名
+- 每个产品的多个PDF文档类型都保存在同一产品代码目录下
+- pdf_links字段记录所有文档的源链接，确保可追溯性
+```

@@ -1,0 +1,98 @@
+{
+  "name": "Phase5_Golden_Test_Set",
+  "version": "1.0.0",
+  "description": "第五阶段核心功能黄金测试集 - 基于E2E测试文档",
+  "total_count": 6,
+  "tier_distribution": {
+    "1": 3,
+    "2": 1,
+    "3": 2
+  },
+  "test_cases": [
+    {
+      "id": "test_basic_01",
+      "question": "身故保险金怎么赔付?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "1.1"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.6,
+      "success_criteria": "Top-5结果中包含section_id='1.1'的条款"
+    },
+    {
+      "id": "test_basic_02",
+      "question": "满期生存保险金的条件是什么?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "1.2"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.6,
+      "success_criteria": "Top-5结果中包含section_id='1.2'的条款"
+    },
+    {
+      "id": "test_exclusion_01",
+      "question": "酒后驾驶会赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含责任免除条款section_id='2.1'"
+    },
+    {
+      "id": "test_exclusion_02",
+      "question": "哪些情况不赔?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含责任免除条款"
+    },
+    {
+      "id": "test_table_01",
+      "question": "第二年的现金价值是多少?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "3"
+      ],
+      "expected_category": "General",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含现金价值表相关内容"
+    },
+    {
+      "id": "test_comparison_01",
+      "question": "身故和满期哪个是保险责任?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "1.1",
+        "1.2"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中同时包含section_id='1.1'和'1.2'"
+    }
+  ]
+}

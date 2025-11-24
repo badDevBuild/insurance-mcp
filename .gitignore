@@ -1,0 +1,30 @@
+__pycache__/
+*.pyc
+*.pdf
+.env
+.venv/
+venv/
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/
+coverage/
+.pytest_cache/
+
+# Debug & temp files
+test_db_debug/
+debug_*.png
+debug_*.txt
+test1.py
+# Data directories (keep structure but ignore content)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/db/*
+!data/db/.gitkeep
+data/vector_store/*
+!data/vector_store/.gitkeep

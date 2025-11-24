@@ -1,0 +1,172 @@
+{
+  "mcp_version": "1.0.0",
+  "tools": [
+    {
+      "name": "lookup_product",
+      "description": "根据模糊的产品名称（可选公司名）查询精确的产品信息。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "product_name": { "type": "string", "description": "产品名称（支持模糊匹配）" },
+          "company": { "type": "string", "description": "可选：按公司过滤" }
+        },
+        "required": ["product_name"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product_id": { "type": "string" },
+                "product_code": { "type": "string" },
+                "product_name": { "type": "string" },
+                "company": { "type": "string" },
+                "category": { "type": "string" },
+                "publish_time": { "type": "string" }
+              },
+              "required": ["product_id", "product_name", "company"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "search_policy_clause",
+      "description": "语义条款检索，支持公司/产品范围/条款类型过滤，返回带来源引用的条款片段。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "自然语言查询" },
+          "company": { "type": "string", "description": "可选：公司过滤" },
+          "product_code": { "type": "string", "description": "可选：产品代码过滤（产品范围检索）" },
+          "category": { "type": "string", "enum": ["Liability", "Exclusion", "Process", "Definition"], "description": "可选：条款类型过滤" },
+          "top_k": { "type": "integer", "default": 5, "minimum": 1, "maximum": 20 }
+        },
+        "required": ["query"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "chunk_id": { "type": "string" },
+                "content": { "type": "string" },
+                "section_id": { "type": "string" },
+                "section_title": { "type": "string" },
+                "similarity_score": { "type": "number" },
+                "category": { "type": "string" },
+                "source_reference": {
+                  "type": "object",
+                  "properties": {
+                    "product_name": { "type": "string" },
+                    "document_type": { "type": "string" },
+                    "pdf_path": { "type": "string" },
+                    "page_number": { "type": "integer" },
+                    "download_url": { "type": "string" }
+                  },
+                  "required": ["product_name", "document_type", "pdf_path", "page_number"]
+                }
+              },
+              "required": ["content", "section_id", "similarity_score", "source_reference"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "check_exclusion_risk",
+      "description": "核查场景是否属于保险免责范围（仅在Exclusion类条款中检索，带免责声明）。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "scenario_description": { "type": "string", "description": "场景描述（如：酒后骑摩托车出事）" },
+          "product_id": { "type": "string", "description": "可选：限定产品" },
+          "strict_mode": { "type": "boolean", "default": true, "description": "严格模式仅返回明确免责条款" }
+        },
+        "required": ["scenario_description"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "risk_detected": { "type": "boolean" },
+          "relevant_clauses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product_name": { "type": "string" },
+                "document_type": { "type": "string" },
+                "pdf_path": { "type": "string" },
+                "page_number": { "type": "integer" },
+                "download_url": { "type": "string" },
+                "section_id": { "type": "string" },
+                "section_title": { "type": "string" }
+              },
+              "required": ["product_name", "document_type", "pdf_path", "page_number"]
+            }
+          },
+          "summary": { "type": "string" },
+          "disclaimer": { "type": "string" }
+        },
+        "required": ["risk_detected", "disclaimer"]
+      }
+    },
+    {
+      "name": "calculate_surrender_value_logic",
+      "description": "提取退保/减额交清的计算逻辑与相关条款及表格。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "product_id": { "type": "string" },
+          "policy_year": { "type": "integer" },
+          "operation": { "type": "string", "enum": ["surrender", "reduced_paid_up"] }
+        },
+        "required": ["product_id", "operation"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "operation_name": { "type": "string" },
+          "definition": { "type": "string" },
+          "calculation_rules": { "type": "array", "items": { "type": "string" } },
+          "conditions": { "type": "array", "items": { "type": "string" } },
+          "consequences": { "type": "array", "items": { "type": "string" } },
+          "related_tables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "table_type": { "type": "string" },
+                "headers": { "type": "array", "items": { "type": "string" } },
+                "rows": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } },
+                "row_count": { "type": "integer" },
+                "column_count": { "type": "integer" }
+              }
+            }
+          },
+          "comparison_note": { "type": "string" },
+          "source_references": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product_name": { "type": "string" },
+                "document_type": { "type": "string" },
+                "pdf_path": { "type": "string" },
+                "page_number": { "type": "integer" },
+                "download_url": { "type": "string" }
+              },
+              "required": ["product_name", "document_type", "pdf_path", "page_number"]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

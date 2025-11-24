@@ -1,50 +1,237 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# 保险 MCP 核心平台宪法 (Insurance MCP Constitution)
 
-## Core Principles
+**版本**: 1.0.0 | **制定日期**: 2025-11-24 | **最后修订**: 2025-11-24
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+---
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+## 核心原则 (Core Principles)
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### I. 准确性高于一切 (Accuracy Above All)
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**条款**: 系统必须提供100%可追溯到已核验源文档的数据。零容忍幻觉或编造信息。
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+**强制要求**:
+- 所有MCP工具返回的数据**必须**关联至"已核验"(VERIFIED)状态的源文档
+- 禁止返回未经人工审核的内容
+- 每个返回结果**必须**包含完整的来源引用 (source_reference)：
+  - 产品名称 (product_name)
+  - 文档类型 (document_type)
+  - 原始PDF路径 (pdf_path)
+  - 页码 (page_number)
+  - 原始下载链接 (download_url)
+- 当查询无匹配结果时，**必须**返回空结果或明确说明"未找到相关条款"，**严禁**编造答案
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**验收标准**: 所有MCP API响应必须通过来源追溯测试 (100%可回溯到原始PDF)
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+---
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### II. Library-First 架构 (Library-First Architecture)
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**条款**: 每个功能模块必须首先实现为独立的、可测试的库，而非仅作为服务端点或CLI命令。
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+**强制要求**:
+- 核心功能（爬虫、解析、索引、检索）**必须**实现为 `src/` 下的独立模块
+- 每个库**必须**:
+  - 具有清晰的单一职责
+  - 可独立测试（无需运行完整服务）
+  - 具有明确的输入/输出契约
+  - 提供详细的docstring文档
+- **禁止**创建仅用于组织代码的"工具库" (util/helper库必须有明确用途)
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**例外**: CLI工具和MCP服务器本身是"入口层"，可调用库但不实现业务逻辑
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+---
+
+### III. CLI Interface 强制要求 (CLI Interface Mandate)
+
+**条款**: 所有核心功能必须通过CLI暴露，以支持手动触发、调试和自动化脚本。
+
+**强制要求**:
+- 每个库的主要功能**必须**通过 `src/cli/manage.py` 或 `src/cli/verify.py` 暴露
+- CLI命令**必须**遵循文本输入/输出协议:
+  - 输入: stdin 或命令行参数
+  - 正常输出: stdout
+  - 错误信息: stderr
+- **必须**同时支持:
+  - JSON格式输出（用于自动化）
+  - 人类可读格式（用于手动操作）
+- 所有CLI命令**必须**提供 `--help` 说明
+
+**示例**: 
+```bash
+# 正确示例
+python -m src.cli.manage crawl run --company pingan-life --limit 10
+python -m src.cli.manage index --rebuild --json
+
+# 错误示例（无CLI，仅API）
+curl -X POST http://localhost:8080/api/crawl
+```
+
+---
+
+### IV. Test-First + 人机协同审核 (Test-First + Human-in-the-Loop)
+
+**条款**: 核心功能必须先编写测试，后实现代码。数据质量必须经过人工审核。
+
+**强制要求（测试）**:
+- **P0/P1功能**的核心逻辑**必须**有单元测试覆盖
+- 测试**必须**在实现代码之前编写（或同步编写）
+- 集成测试**必须**覆盖:
+  - 数据采集到索引的完整流程
+  - MCP工具的端到端调用
+  - 黄金测试集的准确性验证
+
+**强制要求（人工审核）**:
+- 所有PDF转Markdown的结果**必须**经过人工审核才能进入向量索引
+- 审核状态**必须**记录在数据库中 (PENDING → VERIFIED/REJECTED)
+- **禁止**自动将未审核文档标记为"已核验"
+- 审核工具**必须**提供:
+  - 文档预览功能
+  - 批准/驳回操作
+  - 驳回原因记录
+
+**例外**: 单元测试可在重构时补充，但不得延后超过1个Sprint
+
+---
+
+### V. 可追溯性强制要求 (Traceability Mandate)
+
+**条款**: 系统中的每一条数据必须能回溯到其原始来源，支持审计和质量验证。
+
+**强制要求**:
+- 所有PolicyDocument**必须**保存:
+  - 原始PDF文件路径 (local_path)
+  - 原始下载链接 (url)
+  - 文件哈希 (file_hash - SHA-256)
+  - 所有相关文档链接 (pdf_links - JSON格式)
+- 所有PolicyChunk**必须**保存:
+  - 关联的文档ID (document_id)
+  - 原始PDF页码 (page_number)
+  - 条款编号 (section_id)
+  - 来源引用 (source_reference)
+- **禁止**在任何环节删除或覆盖原始PDF文件
+- 元数据更新**必须**记录时间戳 (created_at, updated_at)
+
+**验收标准**: 任何检索结果都能在3步内追溯到原始PDF文件和具体页码
+
+---
+
+### VI. 表格完整性保护 (Table Integrity Protection)
+
+**条款**: 保险条款中的表格（如减额交清表、费率表）必须保持行列结构完整，严禁破坏。
+
+**强制要求**:
+- 表格**必须**作为独立chunk存储，**禁止**与前后文本合并切分
+- 表格**必须**同时保存两种格式:
+  1. Markdown表格格式（用于显示）
+  2. JSON结构格式（用于程序读取）- 存储在 `table_data` 字段
+- JSON结构**必须**包含:
+  - `table_type`: 表格类型/标题
+  - `headers`: 表头列表
+  - `rows`: 数据行列表
+  - `row_count`, `column_count`: 行列数（用于完整性验证）
+- 表格chunk**必须**标记 `is_table: true`
+- **禁止**使用纯文本描述替代表格结构
+
+**验收标准**: 所有表格的行列完整性达到100%（人工抽检验证）
+
+---
+
+### VII. 混合检索强制要求 (Hybrid Retrieval Mandate)
+
+**条款**: 系统必须同时支持语义检索和关键词检索，以应对保险条款的专有名词和精确匹配需求。
+
+**强制要求**:
+- **必须**实现两种检索模式:
+  1. **Dense Vector Search** (语义检索) - 使用BGE embedding
+  2. **Sparse Vector Search** (关键词检索) - 使用BM25算法
+- 两种检索结果**必须**通过 Reciprocal Rank Fusion (RRF) 算法融合
+- 默认权重: 语义检索60%，关键词检索40%
+- **必须**支持动态权重调整:
+  - 数字查询（如"1.2.1条款"）→ 关键词检索权重提升至80%
+  - 问句查询（如"如何退保？"）→ 语义检索权重提升至80%
+- BM25索引和ChromaDB索引**必须**同步更新
+
+**禁止**: 仅使用单一检索模式（纯语义或纯关键词）
+
+---
+
+## 质量门槛 (Quality Gates)
+
+### 1. 数据质量门槛
+
+- **采集阶段**: 所有下载的PDF必须通过哈希去重，防止重复采集
+- **解析阶段**: Markdown转换结果必须人工审核，未通过不得索引
+- **索引阶段**: 仅索引 `verification_status = 'VERIFIED'` 的文档
+
+### 2. 检索性能门槛
+
+基于黄金测试集（50个标准问题）的分层测试：
+
+| 测试类型 | 标准 | 阈值 |
+|---------|------|------|
+| 基础查询 (20题) | Top-1准确率 | ≥ 90% |
+| 对比查询 (15题) | Top-3包含所有相关条款 | ≥ 85% |
+| 免责查询 (15题) | 召回率 / 精确率 | ≥ 95% / ≥ 90% |
+
+**MVP阶段**: 使用6个代表性问题验证框架（基础3+对比1+免责2）
+
+### 3. 合规性门槛
+
+- **QPS限制**: 爬虫全局QPS ≤ 0.8（每域名独立限制）
+- **熔断机制**: 遇到403/429错误自动暂停5分钟
+- **隐私避让**: 严禁访问包含 `policy`, `user`, `personal` 等路径的接口
+- **Robots协议**: 必须遵守目标站点的robots.txt（针对非强制披露目录）
+
+---
+
+## 技术约束 (Technical Constraints)
+
+### 1. 技术栈约束
+
+- **编程语言**: Python 3.10+
+- **向量数据库**: ChromaDB (本地持久化模式)
+- **Embedding模型**: BGE-small-zh-v1.5 (本地部署)
+- **元数据存储**: SQLite (轻量级，适合MVP)
+- **MCP协议**: 官方 `mcp` Python SDK
+
+**禁止**: 引入未在plan.md中声明的重量级依赖（如Elasticsearch, PostgreSQL）
+
+### 2. 数据存储约束
+
+- **原始PDF**: 保存在 `data/raw/{company}/{product_code}/`
+- **Markdown**: 保存在 `data/processed/{document_id}.md`
+- **向量索引**: ChromaDB持久化到 `data/vector_store/`
+- **元数据**: SQLite数据库 `data/db/metadata.sqlite`
+
+**禁止**: 将敏感数据（API密钥、用户信息）存储在代码仓库或日志中
+
+---
+
+## 治理规则 (Governance)
+
+### 1. 宪法权威
+
+- 本宪法**优先于**所有其他实践、代码规范和临时决策
+- 所有代码审查**必须**验证是否符合宪法原则
+- 违反宪法的代码**不得**合并到主分支
+
+### 2. 宪法修订
+
+- 修订宪法**必须**:
+  1. 在spec.md中明确记录修订理由
+  2. 更新受影响的plan.md和tasks.md
+  3. 制定迁移计划（如有破坏性变更）
+  4. 团队明确批准
+- 修订**不得**降低核心原则的强制程度（如"准确性高于一切"不可妥协）
+
+### 3. 复杂性控制
+
+- 引入新的复杂性（新依赖、新架构模式）**必须**在plan.md的"复杂度追踪"表中记录：
+  - 为什么需要？
+  - 为什么更简单的方案不可行？
+- 未在复杂度追踪表中记录的复杂性**不得**引入
+
+---
+
+**版本**: 1.0.0 | **制定日期**: 2025-11-24 | **最后修订**: 2025-11-24

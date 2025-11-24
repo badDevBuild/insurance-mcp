@@ -1,0 +1,35 @@
+from datetime import datetime
+from enum import Enum
+from typing import Optional, Dict
+import uuid
+from pydantic import BaseModel, Field
+
+class VerificationStatus(str, Enum):
+    PENDING = "PENDING"
+    VERIFIED = "VERIFIED"
+    REJECTED = "REJECTED"
+
+class Product(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    product_code: str  # 产品代码（用于去重）
+    name: str
+    company: str
+    category: Optional[str] = None
+    publish_time: Optional[str] = None  # 发布时间
+    created_at: datetime = Field(default_factory=datetime.now)
+
+class PolicyDocument(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    product_id: Optional[str] = None
+    doc_type: str  # 文档类型：产品条款、费率表等
+    filename: str
+    local_path: str
+    url: Optional[str] = None
+    file_hash: Optional[str] = None  # 下载后计算
+    file_size: Optional[int] = None  # 文件大小（字节）
+    downloaded_at: Optional[datetime] = None
+    verification_status: VerificationStatus = Field(default=VerificationStatus.PENDING)
+    auditor_notes: Optional[str] = None
+    markdown_content: Optional[str] = None
+    pdf_links: Dict[str, str] = Field(default_factory=dict)  # 所有PDF链接 {"产品条款": "url1", "费率表": "url2"}
+

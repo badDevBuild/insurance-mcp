@@ -1,0 +1,118 @@
+# 任务清单：保险 MCP 核心平台
+
+**功能分支**: `001-insurance-mcp-core`
+**状态**: 进行中
+**最后更新**: 2025-11-21 - 调整爬虫策略为按保险公司维度采集，第一期聚焦平安人寿
+
+## 实施策略
+
+我们将遵循"数据优先"策略实施系统：
+1. **基础架构**: 设置核心库、CLI 结构和数据库模式。
+2. **采集层 (US3)**: 构建爬虫以获取原始数据 (PDF)。没有数据就无法测试解析。
+3. **处理层 (US2)**: 构建解析器和审核员 CLI，将 PDF 转换为可信的 Markdown。
+4. **检索层 (US1)**: 构建索引器和 MCP 服务器以提供可信数据服务。
+
+此顺序确保每个阶段都有来自上一阶段的真实数据可供使用。
+
+## 第一阶段：设置与基础设施
+
+**目标**: 初始化项目结构、依赖项和共享实用程序。
+
+- [x] T001 创建项目目录结构 (`src/{common,crawler,parser,indexing,mcp_server,cli}`, `tests`, `data`)
+- [x] T002 设置 Python 环境 (pyproject.toml/requirements.txt)，包含 `mcp`, `playwright`, `scrapy`, `pdfplumber`, `chromadb`, `openai`, `typer`，并明确安装 playwright 浏览器 (`playwright install`)
+- [x] T003 实现 `src/common/config.py` (加载 .env 中的 OPENAI_API_KEY, DB 路径)
+- [x] T004 实现 `src/common/logging.py` (标准化日志设置)
+- [x] T005 实现 `src/common/db.py` (SQLite 连接和 `products` 及 `policy_documents` 表的模式初始化)
+- [x] T006 创建 `src/cli/manage.py`，包含基本的 `init` 命令以创建 DB 表和数据目录
+
+## 第二阶段：基础库
+
+**目标**: 跨用户故事使用的核心抽象。
+
+- [x] T007 在 `src/common/models.py` 中实现与 data-model.md 匹配的 `PolicyDocument` 和 `Product` Pydantic 模型
+- [x] T008 在 `src/common/repository.py` 中实现 `SQLiteRepository` 类，用于元数据的 CRUD 操作
+
+## 第三阶段：自动化条款采集 (用户故事 3)
+
+**目标**: 按保险公司维度自动发现并下载保险条款。
+**优先级**: P2 (首先实施以提供数据给 P1 故事)
+**第一期范围**: 仅实现平安人寿官网爬虫
+**状态**: ✅ **已完成 100%** (所有功能已实现)
+
+- [x] T009 [US3] 使用 Playwright 实现 `src/crawler/discovery/iac_spider.py`，从 IAC 提取产品元数据
+- [x] T009a [US3] 实现 `src/crawler/discovery/pingan_life_spider.py`，从平安人寿官网 (https://life.pingan.com/gongkaixinxipilu/baoxianchanpinmulujitiaokuan.jsp) 提取产品元数据、PDF链接
+- [x] T009b [US3] 更新 `src/cli/manage.py`，添加 `crawl run` 统一命令，支持 `--company pingan-life` 参数
+- [x] T010 [US3] 使用 Aiohttp 实现 `src/crawler/acquisition/downloader.py`，下载 PDF 并包含指数退避重试逻辑 (初始延迟 1s, 最大 3 次重试)
+- [x] T011 [US3] 实现 `src/crawler/pipelines/save_pipeline.py` 以哈希文件，保存到 `data/raw/{company}/{product_code}/`，并更新 SQLite
+- [x] T011a [US3] **[新增]** 实现 `src/crawler/pipelines/acquisition_pipeline.py` 完整采集管道（发现+下载+入库），支持智能去重和错误处理
+- [x] T012 [US3] 向 `src/cli/manage.py` 添加 `crawl discover`, `crawl acquire`, `crawl run` 命令
+- [x] T013 [US3] [P] 在 `tests/unit/test_crawler_rules.py` 中添加下载器重试逻辑的单元测试
+- [x] T014 [US3] 在 `src/crawler/middleware/compliance.py` 中实现 robots.txt 合规性检查 (QPS 限制和路径过滤)
+- [x] T014a [US3] 实现全局QPS限流器，确保严格遵守FR-008合规要求
+  - 实现了基于令牌桶算法的RateLimiter类
+  - 支持全局和每域名独立QPS限制（默认0.8 QPS）
+  - 实现了熔断机制（429/403自动触发，5分钟冷却）
+  - 集成到PDFDownloader，所有请求经过限流
+  - 通过21个单元测试和集成测试验证
+
+## 第四阶段：数据审核员核验 (用户故事 2)
+
+**目标**: 解析 PDF 并启用人工核验。
+**优先级**: P1
+
+- [x] T015 [US2] **[已完成]** 实现 `src/parser/layout/analyzer.py` 以检测 PDF 中的列布局 (单栏/双栏)
+  - 使用pdfplumber实现基础版面分析
+  - 检测单栏/双栏布局、表格、图像
+  - 提供质量评分功能
+- [x] T016 [US2] **[已完成]** 使用 `markitdown` 实现 `src/parser/markdown/converter.py` 以生成 Markdown
+  - 采用Microsoft markitdown作为主要方案
+  - 支持产品条款和产品说明书两种文档类型
+  - 转换结果保存到data/processed/目录
+  - 自动更新数据库中的markdown_content字段
+- [ ] T017 [US2] [P] 实现 `src/parser/ocr/paddle.py` 包装器用于 OCR 回退 (开发时可 mock)
+  - 注：markitdown已能处理大部分PDF，OCR暂不需要
+- [x] T018 [US2] **[已完成]** 向 `src/cli/manage.py` 添加 `process` 命令，对 PENDING 文档运行转换器
+  - `process convert`: 批量转换PDF到Markdown
+  - `process analyze`: 分析PDF版面结构
+- [x] T019 [US2] **[已完成]** 实现 `src/cli/verify.py` (审核员 CLI) 以列出 PENDING 文档，显示预览，并将状态更新为 VERIFIED/REJECTED
+  - `verify list`: 列出待审核文档
+  - `verify preview`: 预览Markdown转换结果
+  - `verify approve`: 批准文档
+  - `verify reject`: 驳回文档
+  - `verify stats`: 审核统计
+- [ ] T020 [US2] [P] 在 `tests/unit/test_parser.py` 中添加双栏解析逻辑的单元测试
+
+## 第五阶段：AI 客户端检索 (用户故事 1)
+
+**目标**: 索引已核验数据并通过 MCP 提供服务。
+**优先级**: P1
+
+- [ ] T021 [US1] 实现 `src/indexing/embedding/openai.py` 包装器用于 `text-embedding-3-small`
+- [ ] T022 [US1] 实现 `src/indexing/vector_store/chroma.py` 用于保存/查询嵌入
+- [ ] T023 [US1] 实现 `src/indexing/indexer.py` 以分块 VERIFIED Markdown 文件并保存到 ChromaDB
+- [ ] T024 [US1] 向 `src/cli/manage.py` 添加 `index` 命令
+- [ ] T025 [US1] 实现 `src/mcp_server/tools/search.py` (`search_products` 工具逻辑)，设置高语义相似度阈值 (如 > 0.7)
+- [ ] T026 [US1] 实现 `src/mcp_server/tools/retrieve.py` (`get_product_terms` 工具逻辑)
+- [ ] T027 [US1] 使用 `mcp` SDK 实现 `src/mcp_server/server.py` 入口点
+- [ ] T028 [US1] [P] 添加集成测试 `tests/integration/test_mcp_server.py`，验证搜索返回正确来源
+
+## 第六阶段：完善与跨领域关注点
+
+**目标**: 文档和最终清理。
+
+- [ ] T029 根据 quickstart.md 更新 README.md 的使用说明
+- [ ] T030 验证所有 CLI 命令输出用户友好的日志
+- [ ] T031 最终手动端到端测试：爬取 -> 处理 -> 核验 -> 索引 -> 搜索
+
+## 依赖关系
+
+```mermaid
+graph TD
+    Setup(Phase 1: Setup) --> Foundation(Phase 2: Foundation)
+    Foundation --> Crawler(Phase 3: Crawler / US3)
+    Crawler --> Parser(Phase 4: Parser / US2)
+    Parser --> Auditor(Phase 4: Auditor / US2)
+    Auditor --> Indexer(Phase 5: Indexer / US1)
+    Indexer --> MCPServer(Phase 5: MCP Server / US1)
+```
+
