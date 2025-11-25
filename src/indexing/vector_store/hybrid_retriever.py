@@ -166,12 +166,16 @@ class BM25Index:
         
         logger.info(f"BM25索引已保存到 {path}")
     
-    def load(self, path: str):
+    def load(self, path: Optional[str] = None):
         """从文件加载索引
         
         Args:
-            path: 文件路径
+            path: 文件路径（可选，默认使用config.BM25_INDEX_PATH）
         """
+        if path is None:
+            from src.common.config import config
+            path = config.BM25_INDEX_PATH
+        
         path = Path(path)
         
         if not path.exists():

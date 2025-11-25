@@ -293,9 +293,11 @@ class SurrenderLogicResult:
 
 - **FR-008**: 爬虫必须内置**合规限制**：全局QPS ≤ 0.8 req/s（每域名独立限制），并强制遵守目标站点的 Robots 协议（针对非强制披露目录）；当遇到 403/429 时，必须触发熔断并暂停该域名采集 ≥ 5 分钟。
 
-- **FR-009**: 语义感知切片策略 (Semantic-Aware Chunking)
+- **FR-009**: 语义感知切片与表格处理策略 (Semantic-Aware Chunking & Table Handling)
 
-系统必须实现基于 Markdown 标题层级的智能切片策略，确保上下文完整性：
+系统必须实现基于 Markdown 标题层级的智能切片策略，确保上下文完整性，并正确处理不同类型的表格：
+
+### 9.1 切片策略
 
 - **切片方法**:
   - 基于 Docling 生成的结构化 Markdown 进行切分。
@@ -306,31 +308,36 @@ class SurrenderLogicResult:
   2. **面包屑路径 (Breadcrumb Path)**: 每个 chunk 必须包含完整的章节路径（如 `保险责任 > 重大疾病保险金 > 给付条件`），存储于 `section_path` 字段。
   3. **父级上下文**: 在 chunk 内容头部显式添加父级章节描述。
   4. **大小控制**: 目标 512-1024 tokens，保留 128 tokens 重叠。
-  5. **表格保护**: (见 FR-009a)
+  5. **表格完整性保护**: 见下方表格处理策略。
 
-- **实施要求**:
-  - 实现 `MarkdownChunker`，支持层级感知。
-  - 自动生成并注入 `section_path`。
-
----
-
-- **FR-009a**: 表格完整性与分离策略 (Table Integrity & Separation)
+### 9.2 表格分类与处理
 
 系统必须区分处理"普通表格"和"费率表格"，以优化检索体验：
 
 - **表格分类**:
-  - **费率表 (Rate Table)**: 包含"年龄"、"保费"、"费率"等列，数值密集。
+  - **费率表 (Rate Table)**: 包含"年龄"、"保费"、"费率"等列，数值密集（数值单元格占比 >70%）。
   - **普通表 (Ordinary Table)**: 文本为主，如"保障列表"、"疾病定义"。
 
 - **处理策略**:
-  1. **普通表**: 转换为 Markdown 表格，随文本一同向量化。
+  1. **普通表**: 
+     - 转换为 Markdown 表格，随文本一同向量化。
+     - 作为独立chunk保存，标记 `is_table: true`。
+     - 保留前3行文本作为上下文。
   2. **费率表**: 
      - **序列化**: 导出为 CSV 或 JSON 格式。
      - **存储**: 保存至 `assets/tables/` 目录。
      - **引用**: 在 PolicyChunk 中仅保留 `table_refs` (指向表格UUID)，**不进行向量化**，防止数值噪音干扰语义检索。
+     - 在 `assets/tables/metadata.json` 中记录表格元信息（产品代码、页码范围、列名、行数）。
   
 - **检索优化**:
   - 针对费率查询（Text-to-SQL 准备），后续阶段将基于 CSV 进行精确查询。
+
+### 9.3 实施要求
+
+- 实现 `MarkdownChunker`，支持层级感知和表格识别。
+- 自动生成并注入 `section_path`。
+- 实现 `TableClassifier` 进行表格分类。
+- 实现 `TableSerializer` 导出费率表并维护元数据索引。
 
 ---
 

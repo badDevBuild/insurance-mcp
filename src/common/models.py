@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional, Dict, List
 import uuid
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 class VerificationStatus(str, Enum):
     PENDING = "PENDING"
@@ -61,8 +61,8 @@ class TableData(BaseModel):
     row_count: int = Field(..., description="行数")
     column_count: int = Field(..., description="列数")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "table_type": "减额交清对比表",
                 "headers": ["保单年度", "减额后年金", "备注"],
@@ -74,6 +74,7 @@ class TableData(BaseModel):
                 "column_count": 3
             }
         }
+    )
 
 class PolicyChunk(BaseModel):
     """
@@ -333,8 +334,8 @@ class SourceRef(BaseModel):
     page_number: int = Field(..., description="页码")
     download_url: str = Field(..., description="原始下载链接")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "product_name": "平安福耀年金保险",
                 "document_type": "产品条款",
@@ -343,6 +344,7 @@ class SourceRef(BaseModel):
                 "download_url": "https://life.pingan.com/..."
             }
         }
+    )
 
 
 class ClauseResult(BaseModel):
@@ -354,8 +356,8 @@ class ClauseResult(BaseModel):
     similarity_score: float = Field(..., ge=0.0, le=1.0, description="相似度分数（0-1）")
     source_reference: SourceRef = Field(..., description="来源引用")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "chunk_id": "chunk_a1b2c3d4e5f6",
                 "content": "1.4 保险期间\n本合同的保险期间为...",
@@ -371,6 +373,7 @@ class ClauseResult(BaseModel):
                 }
             }
         }
+    )
 
 
 class ExclusionCheckResult(BaseModel):
@@ -384,8 +387,8 @@ class ExclusionCheckResult(BaseModel):
         description="免责声明（必需）"
     )
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "is_excluded": True,
                 "confidence": 0.95,
@@ -394,6 +397,7 @@ class ExclusionCheckResult(BaseModel):
                 "disclaimer": "本结果仅供参考，实际理赔以保险合同和公司审核为准"
             }
         }
+    )
 
 
 class SurrenderLogicResult(BaseModel):
@@ -410,8 +414,8 @@ class SurrenderLogicResult(BaseModel):
     comparison_note: str = Field(..., description="对比说明（退保 vs 减额交清）")
     source_references: List[SourceRef] = Field(default_factory=list, description="来源引用")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "operation_name": "退保",
                 "definition": "5.2 退保\n您可以随时申请解除本合同...",
@@ -428,6 +432,7 @@ class SurrenderLogicResult(BaseModel):
                 "source_references": []
             }
         }
+    )
 
 
 # ==================== 黄金测试集数据结构 ====================
@@ -471,8 +476,8 @@ class GoldenTestCase(BaseModel):
     created_by: str = Field(default="human", description="创建者（human/generated）")
     created_at: datetime = Field(default_factory=datetime.now)
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "id": "test_001",
                 "question": "这个保险保多久？",
@@ -487,6 +492,7 @@ class GoldenTestCase(BaseModel):
                 "notes": "测试基本信息查询能力"
             }
         }
+    )
 
 
 class GoldenTestSet(BaseModel):
@@ -510,8 +516,8 @@ class GoldenTestSet(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     last_updated: datetime = Field(default_factory=datetime.now)
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "name": "Phase5_Golden_Test_Set",
                 "version": "1.0.0",
@@ -522,4 +528,5 @@ class GoldenTestSet(BaseModel):
                 "category_distribution": {"Liability": 15, "Exclusion": 15, "Process": 10, "Definition": 10}
             }
         }
+    )
 

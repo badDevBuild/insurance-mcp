@@ -15,6 +15,7 @@ class Config:
     PROCESSED_DATA_DIR = DATA_DIR / "processed"
     DB_DIR = DATA_DIR / "db"
     VECTOR_STORE_DIR = DATA_DIR / "vector_store"
+    BM25_INDEX_PATH = VECTOR_STORE_DIR / "bm25_index.json"  # BM25索引保存路径
     ASSETS_DIR = PROJECT_ROOT / "assets"
     TABLE_EXPORT_DIR = ASSETS_DIR / "tables"
 

@@ -463,6 +463,15 @@ class PolicyIndexer:
         logger.info(f"索引重建完成！成功: {stats['success']}, 失败: {stats['failed']}, "
                    f"总chunks: {stats['total_chunks']}")
         
+        # 保存BM25索引
+        if update_bm25 and self.bm25_index:
+            try:
+                from src.common.config import config
+                self.bm25_index.save(str(config.BM25_INDEX_PATH))
+                logger.info(f"BM25索引已保存到 {config.BM25_INDEX_PATH}")
+            except Exception as e:
+                logger.error(f"保存BM25索引失败: {e}")
+        
         return stats
 
 
