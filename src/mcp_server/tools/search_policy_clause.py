@@ -92,16 +92,17 @@ class SearchPolicyClauseTool(BaseTool):
         # 1. 生成查询向量
         query_embedding = self.embed_query(query)
         
-        # 2. 构建过滤条件
-        where = {}
+        # 2. 构建过滤条件 (修复ChromaDB多条件过滤)
+        conditions = []
+        
         if company:
-            where['company'] = company
-        if product_code:  # P0增强: 支持product_code过滤
-            where['product_code'] = product_code
-        if doc_type:  # FR-005: 支持doc_type过滤
-            where['doc_type'] = doc_type
-        # 注意：product_name在metadata中可能不完全匹配，这里简化处理
-        # 理想情况下应该先查找product_id
+            conditions.append({"company": company})
+        if product_code:
+            conditions.append({"product_code": product_code})
+        if product_name:
+            conditions.append({"product_name": product_name})
+        if doc_type:
+            conditions.append({"doc_type": doc_type})
         if category:
             # 确保category是有效的枚举值
             try:
@@ -109,9 +110,19 @@ class SearchPolicyClauseTool(BaseTool):
                     cat_val = ClauseCategory[category].value
                 else:
                     cat_val = category # 尝试直接使用传入值
-                where['category'] = cat_val
+                conditions.append({"category": cat_val})
             except Exception:
                 logger.warning(f"无效的category: {category}，忽略该过滤条件")
+        
+        # 根据条件数量决定where格式
+        if len(conditions) == 0:
+            where = None
+        elif len(conditions) == 1:
+            where = conditions[0]  # 单条件: 直接使用
+        else:
+            where = {"$and": conditions}  # 多条件: 用$and包装
+        
+        logger.info(f"构建过滤条件: {where}")
         
         # 3. 执行检索 (优先使用ChromaDBStore的search，因为它直接支持metadata过滤)
         # 在MVP阶段，我们可能还没有完整的BM25索引加载逻辑，所以先用Dense检索

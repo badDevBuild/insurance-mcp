@@ -214,7 +214,7 @@ class HybridRetriever:
         bm25_index: BM25Index,
         default_bm25_weight: float = 0.5,
         default_vector_weight: float = 0.5,
-        rrf_k: int = 60
+        rrf_k: int = 20  # 降低k值增强BM25影响力
     ):
         """初始化混合检索器
         
@@ -231,7 +231,7 @@ class HybridRetriever:
         self.default_vector_weight = default_vector_weight
         self.rrf_k = rrf_k
         
-        logger.info(f"初始化混合检索器，BM25权重={default_bm25_weight}，Vector权重={default_vector_weight}")
+        logger.info(f"初始化混合检索器，BM25权重={default_bm25_weight}，Vector权重={default_vector_weight}，RRF_k={rrf_k}")
     
     def _detect_query_type(self, query: str) -> str:
         """检测查询类型
@@ -240,15 +240,26 @@ class HybridRetriever:
             query: 查询字符串
         
         Returns:
-            'numeric' 或 'natural'
+            'exclusion' (免责) / 'rate_table' (费率) / 'numeric' (数字) / 'natural' (自然语言)
         """
-        # 简单规则：包含数字、百分号、金额单位的为numeric查询
-        numeric_indicators = ['%', '元', '万元', '天', '年', '月', '日', '岁']
+        query_lower = query.lower()
         
-        # 检查是否包含数字
+        # 1. 免责查询检测
+        exclusion_keywords = ["不赔", "免责", "除外", "不予理赔", "赔吗", "会赔", "能赔", 
+                             "醉酒", "酒驾", "酒后", "自杀", "吸毒", "犯罪", "战争"]
+        if any(kw in query_lower for kw in exclusion_keywords):
+            logger.debug(f"检测到免责查询: {query}")
+            return 'exclusion'
+        
+        # 2. 费率查询检测
+        rate_keywords = ["保费", "费率", "多少钱", "价格", "费用", "交多少", "投保费用"]
         has_number = any(char.isdigit() for char in query)
+        if any(kw in query_lower for kw in rate_keywords):
+            logger.debug(f"检测到费率查询: {query}")
+            return 'rate_table'
         
-        # 检查是否包含数字指示词
+        # 3. 数字查询检测
+        numeric_indicators = ['%', '元', '万元', '天', '年', '月', '日', '岁']
         has_indicator = any(ind in query for ind in numeric_indicators)
         
         if has_number or has_indicator:
@@ -292,14 +303,27 @@ class HybridRetriever:
         
         if auto_weight:
             query_type = self._detect_query_type(query)
-            if query_type == 'numeric':
+            
+            if query_type == 'exclusion':
+                # 免责查询: 关键词匹配很重要("酒驾"/"醉酒")
+                bm25_weight = 0.65
+                vector_weight = 0.35
+                logger.debug(f"免责查询，BM25=0.65，Vector=0.35")
+                
+            elif query_type == 'rate_table':
+                # 费率查询: 关键词+数字精确匹配重要
+                bm25_weight = 0.7
+                vector_weight = 0.3
+                logger.debug(f"费率查询，BM25=0.7，Vector=0.3")
+                
+            elif query_type == 'numeric':
                 bm25_weight = 0.8
                 vector_weight = 0.2
-                logger.debug(f"检测到数字查询，调整权重：BM25=0.8，Vector=0.2")
+                logger.debug(f"数字查询，BM25=0.8，Vector=0.2")
             else:
                 bm25_weight = 0.2
                 vector_weight = 0.8
-                logger.debug(f"检测到自然语言查询，调整权重：BM25=0.2，Vector=0.8")
+                logger.debug(f"自然语言查询，BM25=0.2，Vector=0.8")
         
         # 2. BM25检索
         bm25_results = self.bm25_index.search(query, n_results=n_results * 2)
