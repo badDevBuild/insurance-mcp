@@ -1,0 +1,813 @@
+{
+    "name": "Phase5_Product_Level_Test_Set",
+    "version": "3.0.0",
+    "description": "产品级别黄金测试集 - 所有测试必须指定具体产品",
+    "total_count": 50,
+    "test_distribution": {
+        "product_lookup": 10,
+        "basic_query": 20,
+        "comparison_query": 10,
+        "rate_table_query": 5,
+        "exclusion_query": 5
+    },
+    "products_covered": [
+        "平安福耀年金保险（分红型）",
+        "平安盈添悦两全保险（分红型）",
+        "平安颐享天年养老年金保险（分红型）",
+        "平安御享金越（2026）终身寿险（分红型）",
+        "平安盈尊优享（B款）终身寿险（分红型）"
+    ],
+    "test_cases": [
+        {
+            "id": "lookup_001",
+            "category": "product_lookup",
+            "question": "平安有哪些养老年金产品？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安福耀年金保险（分红型）",
+                "平安颐享天年养老年金保险（分红型）"
+            ],
+            "success_criteria": "Top-3结果中至少包含2个养老年金产品",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_002",
+            "category": "product_lookup",
+            "question": "盈添悦是什么保险？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安盈添悦两全保险（分红型）"
+            ],
+            "success_criteria": "Top-1结果为平安盈添悦两全保险",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_003",
+            "category": "product_lookup",
+            "question": "平安有终身寿险吗？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安御享金越（2026）终身寿险（分红型）",
+                "平安盈尊优享（B款）终身寿险（分红型）"
+            ],
+            "success_criteria": "Top-3结果中包含终身寿险产品",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_004",
+            "category": "product_lookup",
+            "question": "福耀年金保险的全称是什么？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安福耀年金保险（分红型）"
+            ],
+            "success_criteria": "Top-1结果为平安福耀年金保险（分红型）",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_005",
+            "category": "product_lookup",
+            "question": "平安2026年发布的寿险产品有哪些？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安御享金越（2026）终身寿险（分红型）"
+            ],
+            "success_criteria": "结果中包含2026字样的产品",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_006",
+            "category": "product_lookup",
+            "question": "颐享天年是哪个公司的产品？",
+            "expected_company": "平安人寿",
+            "expected_products": [
+                "平安颐享天年养老年金保险（分红型）"
+            ],
+            "success_criteria": "返回平安颐享天年养老年金保险",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_007",
+            "category": "product_lookup",
+            "question": "御享金越是两全保险还是终身寿险？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安御享金越（2026）终身寿险（分红型）"
+            ],
+            "expected_answer_keyword": "终身寿险",
+            "success_criteria": "返回御享金越且标明为终身寿险",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_008",
+            "category": "product_lookup",
+            "question": "盈尊优享B款是什么类型的保险？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安盈尊优享（B款）终身寿险（分红型）"
+            ],
+            "expected_answer_keyword": "终身寿险",
+            "success_criteria": "返回盈尊优享B款且标明为终身寿险",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_009",
+            "category": "product_lookup",
+            "question": "平安有分红型年金保险吗？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安福耀年金保险（分红型）",
+                "平安颐享天年养老年金保险（分红型）"
+            ],
+            "success_criteria": "返回分红型年金产品",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "lookup_010",
+            "category": "product_lookup",
+            "question": "平安人寿有哪些两全保险产品？",
+            "company": "平安人寿",
+            "expected_products": [
+                "平安盈添悦两全保险（分红型）"
+            ],
+            "success_criteria": "返回两全保险产品",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_001",
+            "category": "basic_query",
+            "question": "平安福耀年金保险的保险期间是多久？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "1.4"
+            ],
+            "expected_keywords": [
+                "保险期间",
+                "终身",
+                "年"
+            ],
+            "success_criteria": "Top-1结果包含保险期间说明",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_002",
+            "category": "basic_query",
+            "question": "平安福耀年金保险的犹豫期是多少天？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "5.1"
+            ],
+            "expected_keywords": [
+                "犹豫期",
+                "20日",
+                "天"
+            ],
+            "success_criteria": "Top-1结果包含犹豫期条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_003",
+            "category": "basic_query",
+            "question": "平安盈添悦两全保险如何申请理赔？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "4.3"
+            ],
+            "expected_keywords": [
+                "理赔",
+                "申请",
+                "保险金申请"
+            ],
+            "success_criteria": "Top-1结果包含保险金申请流程",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_004",
+            "category": "basic_query",
+            "question": "平安盈添悦两全保险的身故保险金怎么赔付？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "1.2.6"
+            ],
+            "expected_keywords": [
+                "身故",
+                "保险金",
+                "给付"
+            ],
+            "success_criteria": "Top-1结果包含身故保险金条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_005",
+            "category": "basic_query",
+            "question": "平安颐享天年养老年金保险的宽限期是多久？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "3.3"
+            ],
+            "expected_keywords": [
+                "宽限期",
+                "60日",
+                "天"
+            ],
+            "success_criteria": "Top-1结果包含宽限期说明",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_006",
+            "category": "basic_query",
+            "question": "平安颐享天年养老年金保险什么是现金价值？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "6.1"
+            ],
+            "expected_keywords": [
+                "现金价值",
+                "保单"
+            ],
+            "success_criteria": "Top-1结果包含现金价值定义",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_007",
+            "category": "basic_query",
+            "question": "平安御享金越终身寿险的保单贷款利息怎么算？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "6.2"
+            ],
+            "expected_keywords": [
+                "保单贷款",
+                "利息",
+                "利率"
+            ],
+            "success_criteria": "Top-3结果中包含保单贷款条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_008",
+            "category": "basic_query",
+            "question": "平安御享金越终身寿险受益人可以变更吗？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "4.3"
+            ],
+            "expected_keywords": [
+                "受益人",
+                "变更",
+                "指定"
+            ],
+            "success_criteria": "Top-1结果包含受益人变更相关条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_009",
+            "category": "basic_query",
+            "question": "平安盈尊优享B款终身寿险合同效力中止是什么？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "3.3"
+            ],
+            "expected_keywords": [
+                "效力中止",
+                "恢复",
+                "复效"
+            ],
+            "success_criteria": "Top-1结果包含效力中止条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_010",
+            "category": "basic_query",
+            "question": "平安盈尊优享B款终身寿险如何办理复效？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "3.3"
+            ],
+            "expected_keywords": [
+                "复效",
+                "恢复",
+                "效力"
+            ],
+            "success_criteria": "Top-1结果包含复效相关条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_011",
+            "category": "basic_query",
+            "question": "平安福耀年金保险年龄误告怎么办？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "7.4"
+            ],
+            "expected_keywords": [
+                "年龄",
+                "错误",
+                "误告"
+            ],
+            "success_criteria": "Top-1结果包含年龄误告处理条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_012",
+            "category": "basic_query",
+            "question": "平安福耀年金保险未成年人身故有限制吗？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "7.5"
+            ],
+            "expected_keywords": [
+                "未成年人",
+                "身故",
+                "限制"
+            ],
+            "success_criteria": "Top-1结果包含未成年人身故限制",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_013",
+            "category": "basic_query",
+            "question": "平安盈添悦两全保险什么是保单红利？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "1.3"
+            ],
+            "expected_keywords": [
+                "红利",
+                "分红",
+                "保单"
+            ],
+            "success_criteria": "Top-1结果包含保单红利条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_014",
+            "category": "basic_query",
+            "question": "平安盈添悦两全保险保费自动垫交是什么？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "6.3"
+            ],
+            "expected_keywords": [
+                "自动垫交",
+                "保费",
+                "垫交"
+            ],
+            "success_criteria": "Top-1结果包含自动垫交条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_015",
+            "category": "basic_query",
+            "question": "平安颐享天年养老年金保险合同解除有损失吗？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "5.2"
+            ],
+            "expected_keywords": [
+                "解除",
+                "退保",
+                "损失"
+            ],
+            "success_criteria": "Top-1结果包含解除合同风险说明",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_016",
+            "category": "basic_query",
+            "question": "平安颐享天年养老年金保险减额交清怎么办理？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "6.4"
+            ],
+            "expected_keywords": [
+                "减额交清",
+                "办理"
+            ],
+            "success_criteria": "Top-1结果包含减额交清条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_017",
+            "category": "basic_query",
+            "question": "平安御享金越终身寿险养老金什么时候开始领？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "1.2.1",
+                "2"
+            ],
+            "expected_keywords": [
+                "养老",
+                "领取",
+                "年龄"
+            ],
+            "success_criteria": "Top-1结果包含养老金领取日期条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_018",
+            "category": "basic_query",
+            "question": "平安御享金越终身寿险合同构成有哪些？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "7.1"
+            ],
+            "expected_keywords": [
+                "合同构成",
+                "保险单",
+                "条款"
+            ],
+            "success_criteria": "Top-1结果包含合同构成条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_019",
+            "category": "basic_query",
+            "question": "平安盈尊优享B款终身寿险争议怎么处理？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "7.11",
+                "7.12"
+            ],
+            "expected_keywords": [
+                "争议",
+                "处理",
+                "仲裁"
+            ],
+            "success_criteria": "Top-1结果包含争议处理条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "basic_020",
+            "category": "basic_query",
+            "question": "平安盈尊优享B款终身寿险满期生存保险金的条件是什么？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "1.2"
+            ],
+            "expected_keywords": [
+                "满期",
+                "生存",
+                "保险金"
+            ],
+            "success_criteria": "Top-1结果包含满期生存保险金相关条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_001",
+            "category": "comparison_query",
+            "question": "平安福耀年金保险退保和减额交清的区别？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "5.2",
+                "6.4"
+            ],
+            "expected_keywords": [
+                "退保",
+                "减额交清",
+                "区别"
+            ],
+            "success_criteria": "Top-5结果中包含退保和减额交清条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_002",
+            "category": "comparison_query",
+            "question": "平安盈添悦两全保险保单贷款和保费垫交的区别？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "6.2",
+                "6.3"
+            ],
+            "expected_keywords": [
+                "保单贷款",
+                "垫交",
+                "区别"
+            ],
+            "success_criteria": "Top-5结果中包含保单贷款和垫交条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_003",
+            "category": "comparison_query",
+            "question": "平安盈添悦两全保险犹豫期内退保和犹豫期后退保的区别？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "5.1",
+                "5.2"
+            ],
+            "expected_keywords": [
+                "犹豫期",
+                "退保",
+                "区别"
+            ],
+            "success_criteria": "Top-5结果中包含犹豫期和解除合同条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_004",
+            "category": "comparison_query",
+            "question": "平安颐享天年养老年金保险投保人和被保险人的区别？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "7.3"
+            ],
+            "expected_keywords": [
+                "投保人",
+                "被保险人",
+                "区别"
+            ],
+            "success_criteria": "Top-3结果中包含投保人和被保险人定义",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_005",
+            "category": "comparison_query",
+            "question": "平安颐享天年养老年金保险受益人和继承人的区别？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "4.3"
+            ],
+            "expected_keywords": [
+                "受益人",
+                "继承人",
+                "区别"
+            ],
+            "success_criteria": "Top-3结果中包含受益人和继承人相关说明",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_006",
+            "category": "comparison_query",
+            "question": "平安御享金越终身寿险效力中止和合同终止的区别？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "3.3"
+            ],
+            "expected_keywords": [
+                "效力中止",
+                "终止",
+                "区别"
+            ],
+            "success_criteria": "Top-3结果中包含效力中止和终止条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_007",
+            "category": "comparison_query",
+            "question": "平安御享金越终身寿险累积生息和抵交保费的红利方式区别？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "1.3"
+            ],
+            "expected_keywords": [
+                "累积生息",
+                "抵交保费",
+                "红利"
+            ],
+            "success_criteria": "Top-3结果中包含红利领取方式说明",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_008",
+            "category": "comparison_query",
+            "question": "平安盈尊优享B款终身寿险宽限期内出险和中止期内出险的区别？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "3.3"
+            ],
+            "expected_keywords": [
+                "宽限期",
+                "中止期",
+                "出险"
+            ],
+            "success_criteria": "Top-3结果中包含宽限期和中止期条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_009",
+            "category": "comparison_query",
+            "question": "平安盈尊优享B款终身寿险身故保险金受益人和生存保险金受益人的区别？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "4.3"
+            ],
+            "expected_keywords": [
+                "身故保险金受益人",
+                "生存保险金受益人"
+            ],
+            "success_criteria": "Top-3结果中包含两种受益人相关说明",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "comparison_010",
+            "category": "comparison_query",
+            "question": "平安福耀年金保险身故和满期哪个是保险责任？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "1.1",
+                "1.2"
+            ],
+            "expected_keywords": [
+                "身故",
+                "满期",
+                "保险责任"
+            ],
+            "success_criteria": "Top-5结果中同时包含身故和满期相关条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "rate_table_001",
+            "category": "rate_table_query",
+            "question": "平安福耀年金保险30岁男性保费多少？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_doc_type": "产品费率表",
+            "expected_keywords": [
+                "保费",
+                "费率",
+                "30岁"
+            ],
+            "success_criteria": "Top-1结果doc_type=产品费率表",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "rate_table_002",
+            "category": "rate_table_query",
+            "question": "平安盈添悦两全保险的费率表在哪里？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_doc_type": "产品费率表",
+            "expected_keywords": [
+                "费率表"
+            ],
+            "success_criteria": "Top-1结果doc_type=产品费率表",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "rate_table_003",
+            "category": "rate_table_query",
+            "question": "平安颐享天年养老年金保险一年交多少钱？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_doc_type": "产品费率表",
+            "expected_keywords": [
+                "保费",
+                "交",
+                "钱"
+            ],
+            "success_criteria": "Top-1结果doc_type=产品费率表",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "rate_table_004",
+            "category": "rate_table_query",
+            "question": "平安御享金越终身寿险40岁女性投保费用？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_doc_type": "产品费率表",
+            "expected_keywords": [
+                "保费",
+                "费用",
+                "40岁"
+            ],
+            "success_criteria": "Top-1结果doc_type=产品费率表",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "rate_table_005",
+            "category": "rate_table_query",
+            "question": "平安盈尊优享B款终身寿险50岁保费价格表？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_doc_type": "产品费率表",
+            "expected_keywords": [
+                "保费",
+                "价格",
+                "50岁"
+            ],
+            "success_criteria": "Top-1结果doc_type=产品费率表",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "exclusion_001",
+            "category": "exclusion_query",
+            "question": "平安福耀年金保险酒后驾驶会赔吗？",
+            "product_name": "平安福耀年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "2"
+            ],
+            "expected_keywords": [
+                "酒后驾驶",
+                "免责",
+                "不赔"
+            ],
+            "expected_doc_type": "产品条款",
+            "success_criteria": "Top-1结果包含免责条款且提到酒后驾驶",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "exclusion_002",
+            "category": "exclusion_query",
+            "question": "平安盈添悦两全保险哪些情况不赔？",
+            "product_name": "平安盈添悦两全保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "2"
+            ],
+            "expected_keywords": [
+                "免责",
+                "不赔",
+                "责任免除"
+            ],
+            "expected_doc_type": "产品条款",
+            "success_criteria": "Top-1结果包含责任免除条款",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "exclusion_003",
+            "category": "exclusion_query",
+            "question": "平安颐享天年养老年金保险自杀赔不赔？",
+            "product_name": "平安颐享天年养老年金保险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "2"
+            ],
+            "expected_keywords": [
+                "自杀",
+                "免责",
+                "不赔"
+            ],
+            "expected_doc_type": "产品条款",
+            "success_criteria": "Top-1结果包含免责条款且提到自杀",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "exclusion_004",
+            "category": "exclusion_query",
+            "question": "平安御享金越终身寿险投保人故意杀害被保险人赔吗？",
+            "product_name": "平安御享金越（2026）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "2"
+            ],
+            "expected_keywords": [
+                "故意杀害",
+                "免责",
+                "不赔"
+            ],
+            "expected_doc_type": "产品条款",
+            "success_criteria": "Top-1结果包含免责条款且提到故意杀害",
+            "min_similarity": 0.3
+        },
+        {
+            "id": "exclusion_005",
+            "category": "exclusion_query",
+            "question": "平安盈尊优享B款终身寿险吸毒导致身故赔吗？",
+            "product_name": "平安盈尊优享（B款）终身寿险（分红型）",
+            "company": "平安人寿",
+            "expected_section_ids": [
+                "2"
+            ],
+            "expected_keywords": [
+                "吸毒",
+                "免责",
+                "不赔"
+            ],
+            "expected_doc_type": "产品条款",
+            "success_criteria": "Top-1结果包含免责条款且提到吸毒",
+            "min_similarity": 0.3
+        }
+    ]
+}

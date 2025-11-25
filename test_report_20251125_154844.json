@@ -1,0 +1,1312 @@
+{
+  "test_set_name": "Phase5_Golden_Test_Set_Labeled",
+  "test_set_version": "2.0.0",
+  "total_count": 50,
+  "execution_time": "2025-11-25T15:48:44.744100",
+  "summary": {
+    "total": 50,
+    "passed": 2,
+    "failed": 48,
+    "error": 0,
+    "pass_rate": 4.0,
+    "by_type": {
+      "basic": {
+        "total": 20,
+        "passed": 0,
+        "failed": 20,
+        "error": 0,
+        "pass_rate": 0.0
+      },
+      "comparison": {
+        "total": 15,
+        "passed": 2,
+        "failed": 13,
+        "error": 0,
+        "pass_rate": 13.333333333333334
+      },
+      "exclusion": {
+        "total": 15,
+        "passed": 0,
+        "failed": 15,
+        "error": 0,
+        "pass_rate": 0.0
+      }
+    }
+  },
+  "detailed_results": [
+    {
+      "test_id": "test_basic_001",
+      "question": "身故保险金怎么赔付?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "1.2.6"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.5773001909255981,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 5
+      },
+      "mcp_response_count": 5,
+      "execution_time_ms": 2347.51,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "9ad680a6-d37f-4fdd-aa5e-1128476c3a57",
+          "content_preview": "[章节: 身故保险金]\n\n被保险人身故，我们按下列两者的较大值给付身故保险金，本合同终止：\n1.本合同的所交保险费减去已产生的养老保险金；\n2.被保险人身故当时本合同的现金价值。\n若被保险人身故时尚未满足养老保险金给付条件，上述'已产生的养老保险金'为零。\n上述'所交保险费'按照被保险人身故当时本合同的基本保险金额确定的年交保险费×\n已交费年度数计算。\n以上'养老保险金'及'身故保险金'中所称的基...",
+          "section_id": "",
+          "section_title": "身故保险金",
+          "similarity_score": 0.5773,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安盛世优享（2026）养老年金保险（分红型）"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "3c74e1cb-904b-456f-bb20-7de6bcade606",
+          "content_preview": "[章节:  身故保险金]\n\n（一）若合同被保险人为一人，被保险人身故，我们按下列两者的较大值给付身故保险 金，合同终止：\n1．所交保险费；\n2．被保险人身故时现金价值。\n（二）若合同被保险人为两人，我们按照如下约定给付身故保险金，合同终止：\n-\n1．若两名被保险人先后身故，在两名被保险人均身故后，我们向后身故的被保险人指定 的身故保险金受益人给付身故保险金，身故保险金为下列两者的较大值：\n（1）...",
+          "section_id": "",
+          "section_title": " 身故保险金",
+          "similarity_score": 0.5621,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安安颐尊享年金保险（分红型）"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "fa16a002-7ccf-40de-87ea-71dce5aa3a40",
+          "content_preview": "[章节:  身故保险金：]\n\n（一）若被保险人于 18 周岁之前（不含 18 周岁）身故，我们按下列两者的较大 值给付身故保险金，合同终止：\n（ 1 ）合同的所交保险费；\n（ 2 ）被保险人身故当时合同的现金价值。\n（二）若被保险人于 18 周岁之后（含 18 周岁）身故且交费期间未届满，我们按 下列二者的较大值给付身故保险金，合同终止：\n（ 1 ）合同的所交保险费乘以下表所对应的比例：\n（ 2...",
+          "section_id": "",
+          "section_title": " 身故保险金：",
+          "similarity_score": 0.5538,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安盈尊优享（B款）终身寿险（分红型）"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "ad2d11c7-e442-4ebc-b0b6-6c42a660d732",
+          "content_preview": "[章节:  身故保险金：]\n\n-\n4X5\n1 所交保费的一定比例：根据被保人身故当时到达年龄，18（含）-40周岁（含）/41（含） -60 周岁（含）/61 周岁及以上，分别为所交保费的160%/140%/120%。\n2 当年度保额=基本保险金额×（1+1.75%） (n-1) ,n 为身故当时的保单年度数。\n以上'身故保险金'中所称的基本保险金额不包括因红利分配产生的相关利益。\n说明：若合同...",
+          "section_id": "",
+          "section_title": " 身故保险金：",
+          "similarity_score": 0.546,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安御享金越（2026）终身寿险（分红型）"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "7f7eb612-a5c2-41ef-9621-d9ffac8b4163",
+          "content_preview": "[章节:  身故保险金：]\n\n被保险人身故，我们按下列两者的较大值给付身故保险金，合同终止：\n（1）合同的所交保险费减去已产生的养老保险金；\n（2）被保险人身故当时合同的现金价值。\n若被保险人身故时尚未满足养老保险金给付条件，上述'已产生的养老保险金' 为零。\n以上'养老保险金' 、 '身故保险金'中所称的基本保险金额及现金价值均不包括 因红利分配产生的相关利益。",
+          "section_id": "",
+          "section_title": " 身故保险金：",
+          "similarity_score": 0.5457,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安鑫安优享养老年金保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_basic_002",
+      "question": "满期生存保险金的条件是什么?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "1.2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.610964298248291,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 5
+      },
+      "mcp_response_count": 5,
+      "execution_time_ms": 33.3,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "02623193-01a7-474b-9a41-4e0b38a6b790",
+          "content_preview": "[章节: 满期生存保险金]\n\n-\n被保险人于保险期间届满时仍生存，我们按期满时合同年交保险费×您与我们约定的交 费年度数给付满期生存保险金，合同终止。",
+          "section_id": "",
+          "section_title": "满期生存保险金",
+          "similarity_score": 0.611,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安创尊享安心百分百（2026）两全保险"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "3943672a-98dd-4db0-a826-eb9c73701b0b",
+          "content_preview": "[章节:  满期生存保险金：]\n\n被保险人于保险期间届满时仍生存，我们按照保险期间届满时所交保险费给付满 期生存保险金，合同终止。",
+          "section_id": "",
+          "section_title": " 满期生存保险金：",
+          "similarity_score": 0.5973,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安安盈年金保险（分红型）"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "c01d84cb-36df-4653-8ff7-cd48300ae1b0",
+          "content_preview": "[章节:  满期生存保险金]\n\n被保险人于保险期间届满时仍生存，我们按照保险期间届满时合同基本保险金额给付满 期生存保险金，合同终止。\n-",
+          "section_id": "",
+          "section_title": " 满期生存保险金",
+          "similarity_score": 0.5963,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安御享金越年金保险（分红型）"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "f78dd72c-7e22-4229-b3e3-fb565072646d",
+          "content_preview": "[章节: 满期生存保险金]\n\n被保险人于保险期间届满时仍生存，我们按照下列两者之和给付满期生存保险金，合同 终止：\n1.保险期间届满时合同的基本保险金额×您与我们约定的交费年度数；\n2.合同的所交保险费。",
+          "section_id": "",
+          "section_title": "满期生存保险金",
+          "similarity_score": 0.583,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安颐享天年养老年金保险（分红型）"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "b8d30b41-93dc-4aaa-bd96-dfe3240e884f",
+          "content_preview": "[章节:  满期生存保险金]\n\n（一）若合同被保险人为一人，被保险人于保险期间届满时仍生存，我们按照保险期间 届满时合同的现金价值给付满期生存保险金，合同终止。",
+          "section_id": "",
+          "section_title": " 满期生存保险金",
+          "similarity_score": 0.5739,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安安颐尊享年金保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_basic_003",
+      "question": "保险期间是多久?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "1.4"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.5108106732368469,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 5
+      },
+      "mcp_response_count": 5,
+      "execution_time_ms": 31.15,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "885eb6fd-faee-488e-9335-b5f6a9d9e1bf",
+          "content_preview": "[章节: 1. 我们保什么、保多久]\n\n1.1 保险金额\n1.2 保险责任\n1.3 保单红利\n1.4 保险期间",
+          "section_id": "",
+          "section_title": "1. 我们保什么、保多久",
+          "similarity_score": 0.5108,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安福耀年金保险（分红型）"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "c90c8437-2810-4512-9d58-020f72cb02c7",
+          "content_preview": "[章节: 1. 我们保什么、保多久]\n\n1.1 保险金额\n1.2 保险责任\n1.3 保单红利\n1.4 保险期间",
+          "section_id": "",
+          "section_title": "1. 我们保什么、保多久",
+          "similarity_score": 0.5108,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安盈添悦两全保险（分红型）"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "f85b0b41-7065-4a11-9920-aa50f78bb319",
+          "content_preview": "[章节: 1. 我们保什么、保多久]\n\n1.1 保险金额\n1.2 保险责任\n1.3 保单红利\n1.4 保险期间",
+          "section_id": "",
+          "section_title": "1. 我们保什么、保多久",
+          "similarity_score": 0.5108,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安颐享天年养老年金保险（分红型）"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "2a7ed96d-37dc-47eb-9f0c-6bd2dceec660",
+          "content_preview": "[章节: 1. 我们保什么、保多久]\n\n1.1 保险金额\n1.2 保险责任\n1.3 保单红利\n1.4 保险期间",
+          "section_id": "",
+          "section_title": "1. 我们保什么、保多久",
+          "similarity_score": 0.5108,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安颐享延年（2026）养老年金保险（分红型）"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "4ff5bf6e-1089-4a09-a10d-510bfaf228b1",
+          "content_preview": "[章节: 保险期间]\n\n-\n合同的保险期间自合同生效时起算，分为至被保险人70周岁的保单周年日零时止、至被 保险人75周岁的保单周年日零时止、至被保险人80周岁的保单周年日零时止三种。保险期 间由您在投保时与我们约定，并在保险单上载明。",
+          "section_id": "",
+          "section_title": "保险期间",
+          "similarity_score": 0.5081,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安创尊享安心百分百（2026）两全保险"
+        }
+      ]
+    },
+    {
+      "test_id": "test_basic_004",
+      "question": "犹豫期是多少天?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "5.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.28,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_005",
+      "question": "如何申请理赔?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "4.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 31.09,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_006",
+      "question": "受益人可以变更吗?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "4.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 31.75,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_007",
+      "question": "保单贷款利息怎么算?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "6.2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.547192394733429,
+      "section_ids_matched": [
+        "6.1"
+      ],
+      "category_distribution": {
+        "Unknown": 3
+      },
+      "mcp_response_count": 3,
+      "execution_time_ms": 14.73,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "07fe4235-69e5-4439-b496-becd32a1752c",
+          "content_preview": "[章节: 6.1 现金价值]\n\n6.2 保单贷款\n6.3 自动垫交\n指保险单所具有的价值，通常体现为解除合同时，根据精算原理计算的、 由我们退还的那部分金额。保单年度末的现金价值会在保险合同上载明， 保单年度内的现金价值，您可以向我们咨询。\n我们的咨询电话为95511。\n本合同为分红保险合同，您的保单实际具有的现金价值除保险单上载明的 数值之外，可能还包括由于红利分配而产生的相关利益。由于因红利分...",
+          "section_id": "6.1",
+          "section_title": "6.1 现金价值",
+          "similarity_score": 0.5472,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安福耀年金保险（分红型）"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "2e007ec8-12e8-4bca-a5f3-4f09463f3ef0",
+          "content_preview": "[章节: ● 保单贷款]\n\n经被保险人书面同意，您可申请使用保单贷款功能。\n在合同有效期内，经我们审核同意后您可在犹豫期后办理保单贷款。贷款金额不得超过\n-\n申请贷款时保险合同现金价值的80%扣除各项欠款后的余额，每次贷款期限最长不超过6个 月，贷款利率按您与我们约定的利率执行。我们会参考贷款市场利率水平、公司资金成本、 保险资金运用水平、公司流动性状况等因素并根据不同产品类型、产品定价利率等综合...",
+          "section_id": "",
+          "section_title": "● 保单贷款",
+          "similarity_score": 0.5069,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安创尊享安心百分百（2026）两全保险"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "9335c302-ca7e-4928-83b0-5a9b0ce49984",
+          "content_preview": "[章节: 保单贷款]\n\n经被保险人书面同意，您可申请使用保单贷款功能。\n在合同有效期内，经我们审核同意后您可在犹豫期后办理保单贷款。贷款金额不得超过 申请贷款时保险合同现金价值的80%扣除各项欠款后的余额，每次贷款期限最长不超过6个 月，贷款利率按您与我们约定的利率执行。我们会参考贷款市场利率水平、公司资金成本、 保险资金运用水平、公司流动性状况等因素并根据不同产品类型、产品定价利率等综合确定 保...",
+          "section_id": "",
+          "section_title": "保单贷款",
+          "similarity_score": 0.5041,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安创享爱满分（2026）两全保险"
+        }
+      ]
+    },
+    {
+      "test_id": "test_basic_008",
+      "question": "什么是现金价值?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "6.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 13.61,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_009",
+      "question": "宽限期是多久?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.59,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_010",
+      "question": "合同效力中止是什么?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.565540075302124,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 1
+      },
+      "mcp_response_count": 1,
+      "execution_time_ms": 11.3,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "f19ac1ae-3f1f-49d8-8ba5-c24098dd66a8",
+          "content_preview": "[章节: 效力中止：]\n\n在合同效力中止期间，我们不承担保险责任，合同不再参与红利分配，同时累积 生息的红利余额从合同中止日起停止计息。",
+          "section_id": "",
+          "section_title": "效力中止：",
+          "similarity_score": 0.5655,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安福耀年金保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_basic_011",
+      "question": "如何办理复效?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.15,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_012",
+      "question": "年龄误告怎么办?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "7.4"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.13,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_013",
+      "question": "未成年人身故有限制吗?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "7.5"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 78.28,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_014",
+      "question": "什么是保单红利?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "1.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.23,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_015",
+      "question": "保费自动垫交是什么?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "6.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.02,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_016",
+      "question": "合同解除有损失吗?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "5.2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.95,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_017",
+      "question": "减额交清怎么办理?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "6.4"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.45,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_018",
+      "question": "养老金什么时候开始领?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "1.2.1",
+        "2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 10.8,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_019",
+      "question": "合同构成有哪些?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "7.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.12,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_basic_020",
+      "question": "争议怎么处理?",
+      "query_type": "basic",
+      "expected_section_ids": [
+        "7.11",
+        "7.12"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.31,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_001",
+      "question": "身故和满期哪个是保险责任?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "1.1",
+        "1.2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.5092766880989075,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 4
+      },
+      "mcp_response_count": 4,
+      "execution_time_ms": 29.9,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "24101991-f990-406b-b672-291ee0856384",
+          "content_preview": "[章节:  身故保险金]\n\n（一）被保险人于 18 周岁之前（不含 18 周岁）身故的，我们按下列两者的较大 值给付身故保险金，合同终止：\n（ 1 ）被保险人身故当时合同基本保险金额对应的年交保险费×已交费年度数；\n（ 2 ）被保险人身故当时合同的现金价值。\n（二）被保险人于 18 周岁之后（含 18 周岁）身故的，我们按下列两者的较大值 给付身故保险金，合同终止：\n（ 1 ）合同的所交保险费乘...",
+          "section_id": "",
+          "section_title": " 身故保险金",
+          "similarity_score": 0.5093,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安盈添悦两全保险（分红型）"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "63ea057e-e03a-46ec-842d-7763c980f41c",
+          "content_preview": "[章节: 责任免除]\n\n-\n若合同被保险人为一人，因下列情形之一导致被保险人身故的，我们不承担给付身故保 险金的责任；若合同被保险人为两人，因下列第1项情形导致任一被保险人身故的，我们不 承担给付身故保险金的责任，因下列其他情形之一导致后身故的被保险人身故的，我们不承 担给付身故保险金的责任：\n1.投保人对被保险人的故意杀害、故意伤害；\n2.被保险人故意犯罪或者抗拒依法采取的刑事强制措施；\n3.被...",
+          "section_id": "",
+          "section_title": "责任免除",
+          "similarity_score": 0.5041,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安御享金越（2026）终身寿险（分红型）"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "3d8dbed5-918c-48e6-aac6-396358457b83",
+          "content_preview": "[章节: 责任免除]\n\n-\n若合同被保险人为一人，因下列情形之一导致被保险人身故的，我们不承担给付身故保 险金的责任；若合同被保险人为两人，因下列第1项情形导致任一被保险人身故的，我们不 承担给付身故保险金的责任，因下列其他情形之一导致后身故的被保险人身故的，我们不承 担给付身故保险金的责任：\n1.投保人对被保险人的故意杀害、故意伤害；\n2.被保险人故意犯罪或者抗拒依法采取的刑事强制措施；\n3.被...",
+          "section_id": "",
+          "section_title": "责任免除",
+          "similarity_score": 0.5041,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安创享盛世金越（尊享版26）终身寿险（分红型）"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "77357570-e5b2-439e-8e6f-fa3763f16ae9",
+          "content_preview": "[章节: 1.保险责任]\n\n在合同保险期间内，我们承担如下保险责任：\n 满期生存保险金\n被保险人于保险期间届满时仍生存，我们按照合同基本保险金额给付满期生存保\n险金，合同终止。",
+          "section_id": "",
+          "section_title": "1.保险责任",
+          "similarity_score": 0.5013,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安盈添悦两全保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_comparison_002",
+      "question": "退保和减额交清的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "5.2",
+        "6.4"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.61,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_003",
+      "question": "保单贷款和保费垫交的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "6.2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 10.68,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_004",
+      "question": "犹豫期内退保和犹豫期后退保的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "5.1",
+        "5.2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.5190776586532593,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 4
+      },
+      "mcp_response_count": 4,
+      "execution_time_ms": 30.37,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "e5b3a3d1-5e5f-4619-82d6-0785ed939335",
+          "content_preview": "[章节:  如何退保]\n\n这部分讲的是您可随时申请退保，在犹豫期内退保没有损失，犹豫期后退保会有损失。",
+          "section_id": "",
+          "section_title": " 如何退保",
+          "similarity_score": 0.5191,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安福耀年金保险（分红型）"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "419d05d9-00a5-42ef-8d71-102b4e9ac38a",
+          "content_preview": "[章节:  如何退保]\n\n这部分讲的是您可随时申请退保，在犹豫期内退保没有损失，犹豫期后退保会有损失。",
+          "section_id": "",
+          "section_title": " 如何退保",
+          "similarity_score": 0.5191,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安盈添悦两全保险（分红型）"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "5305e9c7-8c9c-4c83-958d-257aa2ba3587",
+          "content_preview": "[章节: 如何退保]\n\n这部分讲的是您可随时申请退保，在犹豫期内退保没有损失，犹豫期后退保会有损失。",
+          "section_id": "",
+          "section_title": "如何退保",
+          "similarity_score": 0.5191,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安颐享天年养老年金保险（分红型）"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "8bc29fb9-3aaa-4e36-98d6-9e12aa0acd6d",
+          "content_preview": "[章节:  如何退保]\n\n这部分讲的是您可随时申请退保，在犹豫期内退保没有损失，犹豫期后退保会有损失。",
+          "section_id": "",
+          "section_title": " 如何退保",
+          "similarity_score": 0.5191,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安颐享延年（2026）养老年金保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_comparison_005",
+      "question": "投保人和被保险人的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "7.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 31.08,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_006",
+      "question": "受益人和继承人的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "4.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.87,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_007",
+      "question": "效力中止和合同终止的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.78,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_008",
+      "question": "累积生息和抵交保费的红利方式区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "1.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.5988831520080566,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 5
+      },
+      "mcp_response_count": 5,
+      "execution_time_ms": 11.71,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "77318fda-b2cf-44d0-996e-3095db3e6c80",
+          "content_preview": "[章节:  红利领取方式：]\n\n您在投保时可选择以下任何一种红利领取方式，如果您在投保时未选择红利领取 方式，则以累积生息方式办理：\n（ 1 ）累积生息：红利留存在本公司，按我们每年确定的利率储存生息，并于您 申请或合同终止时给付。\n（ 2 ）抵交保险费：红利用于抵交下一期的应付保险费，如果抵交后仍有余额， 则用于抵交以后各期的应付保险费，但该余额不计利息。交费期满后，抵交保险费方 式自动变更为...",
+          "section_id": "",
+          "section_title": " 红利领取方式：",
+          "similarity_score": 0.5989,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安安盈年金保险（分红型）"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "f3e0e717-67e6-464c-a754-3c9d92228378",
+          "content_preview": "[章节:  红利领取方式：]\n\n目前我们为您提供累积生息、抵交保险费以及购买交清增额保险三种红利领取方 式，如果您在投保时未选择红利领取方式，则以累积生息方式办理：\n（ 1 ）累积生息：红利留存在本公司，按我们每年确定的利率储存生息，并于您\n申请或合同终止时给付。\n（ 2 ）抵交保险费：红利用于抵交下一期的应付保险费，如果抵交后仍有余额， 则用于抵交以后各期的应付保险费，但该余额不计利息。交费期...",
+          "section_id": "",
+          "section_title": " 红利领取方式：",
+          "similarity_score": 0.5448,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安盈添悦两全保险（分红型）"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "ef684048-3413-4e85-b82b-fa6696dace89",
+          "content_preview": "[章节:  红利领取方式：]\n\n您在投保时可选择以下任何一种红利领取方式，如果您在投保时未选择红利领取 方式，则以累积生息方式办理：\n（ 1 ）累积生息：红利留存在本公司，按我们每年确定的利率储存生息，并于您 申请或合同终止时给付。\n（ 2 ）抵交保险费：红利用于抵交下一期的应付保险费，如果抵交后仍有余额， 则用于抵交以后各期的应付保险费，但该余额不计利息。交费期满后，抵交保险费方 式自动变更为...",
+          "section_id": "",
+          "section_title": " 红利领取方式：",
+          "similarity_score": 0.524,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安福耀年金保险（分红型）"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "1e1f5999-4f70-4f1a-8ac4-ae291e93bf20",
+          "content_preview": "[章节:  红利领取方式：]\n\n您在投保时可选择以下任何一种红利领取方式，如果您在投保时未选择红利领取 方式，则以累积生息方式办理：\n（ 1 ）累积生息：红利留存在本公司，按我们每年确定的利率储存生息，并于您 申请或合同终止时给付。\n（ 2 ）抵交保险费：红利用于抵交下一期的应付保险费，如果抵交后仍有余额， 则用于抵交以后各期的应付保险费，但该余额不计利息。交费期满后，抵交保险费方 式自动变更为...",
+          "section_id": "",
+          "section_title": " 红利领取方式：",
+          "similarity_score": 0.517,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安鑫安优享养老年金保险（分红型）"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "bfe2b956-80b2-499c-8c89-6d0f27e73ae7",
+          "content_preview": "[章节: 2.1]\n\n以上'满期生存保险金' 、 '身故保险金'中所称的基本保险金额及现金价值均 不包括因红利分配产生的相关利益。\n本合同为分红保险合同， 您享有参与分配我们分红保险业务可分配盈余的权利。 在本合同保险期间内，我们每年根据分红保险业务的实际经营状况确定红利分 配方案。保单红利是不保证的。\n若我们确定本合同有红利分配，则该红利将于 保单周年日 4 分配给您，我们会向 您寄送每个 保单...",
+          "section_id": "",
+          "section_title": "2.1",
+          "similarity_score": 0.5089,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安盈添悦两全保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_comparison_009",
+      "question": "生存保险金和特别生存保险金的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "1.2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.5139199793338776,
+      "section_ids_matched": [],
+      "category_distribution": {
+        "Unknown": 1
+      },
+      "mcp_response_count": 1,
+      "execution_time_ms": 11.74,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "406417aa-41fb-425a-b154-e9584252455a",
+          "content_preview": "[章节:  特别生存保险金：]\n\n合同特别生存保险金领取日根据投保时您与我们约定的交费期间确定（详见下 表）并在保险单上载明。\n被保险人到达约定的特别生存保险金领取日仍生存，我们按合同基本保险金额给 付一次特别生存保险金，本项保险责任终止。\n\n| 0 | 1 |\n| --- | --- |\n| 交费期间 | 特别生存保险金领取日 |\n| 1年交 （趸交） | 第5个保单周年日 |\n| 3年交 |...",
+          "section_id": "",
+          "section_title": " 特别生存保险金：",
+          "similarity_score": 0.5139,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安安盈年金保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_comparison_010",
+      "question": "即期领取和约定年龄领取的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "2"
+      ],
+      "status": "通过",
+      "top_1_similarity": 0.5094442367553711,
+      "section_ids_matched": [
+        "2"
+      ],
+      "category_distribution": {
+        "Unknown": 1
+      },
+      "mcp_response_count": 1,
+      "execution_time_ms": 31.44,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "c7d5733a-7e5e-4c1b-997b-277d73fa0842",
+          "content_preview": "[章节: 2 何时领 （开始领取方式）：]\n\n您可以与我们约定即期领取或约定开始领取年龄领取。\n若为即期领取：\n年领的首个养老保险金领取日为：合同犹豫期满后次日。\n月领的首个养老保险金领取日为：合同生效后首个月度第1日和合同犹豫期满后次日的 较晚者。\n若为约定开始领取年龄领取：\n年领或月领的开始领取日为：您与我们约定的开始领取年龄的保单周年日。",
+          "section_id": "2",
+          "section_title": "2 何时领 （开始领取方式）：",
+          "similarity_score": 0.5094,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安颐享延年（2026）养老年金保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_comparison_011",
+      "question": "交清增额保险和基本保险金额的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "1.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.35,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_012",
+      "question": "宽限期内出险和中止期内出险的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.97,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_013",
+      "question": "主险和附加险的关系?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "7.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.71,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_014",
+      "question": "趸交和期交的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "2"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.01,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_comparison_015",
+      "question": "身故保险金受益人和生存保险金受益人的区别?",
+      "query_type": "comparison",
+      "expected_section_ids": [
+        "4.3"
+      ],
+      "status": "通过",
+      "top_1_similarity": 0.6582894325256348,
+      "section_ids_matched": [
+        "4.3",
+        "4.3"
+      ],
+      "category_distribution": {
+        "Unknown": 5
+      },
+      "mcp_response_count": 5,
+      "execution_time_ms": 28.68,
+      "error": null,
+      "mcp_responses": [
+        {
+          "rank": 1,
+          "chunk_id": "ceac4244-e47a-4a4f-a157-4a41784eee7b",
+          "content_preview": "[章节: 4.3 保险金申请]\n\n1.身故保险金受益人\n您或者被保险人可以指定一人或多人为身故保险金受益人。\n身故保险金受益人为多人时，可以确定受益顺序和受益份额；如果没有确 定份额，各受益人按照相等份额享有受益权。\n被保险人为无民事行为能力人或限制民事行为能力人的，可以由其监护人 指定受益人。\n您或者被保险人可以变更身故保险金受益人并书面通知我们。我们收到变 更受益人的书面通知后，在保险单或其他...",
+          "section_id": "4.3",
+          "section_title": "4.3 保险金申请",
+          "similarity_score": 0.6583,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安福耀年金保险（分红型）"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "969296d6-d043-40f7-8f01-36632d60ae68",
+          "content_preview": "[章节: 身故保险金：]\n\n被保险人身故，我们按下列两者的较大值给付身故保险金，合同终止：\n（1）合同的所交保险费；\n（2）被保险人身故当时合同的现金价值。\n以上'生存保险金' 、 '特别生存保险金' 、 '身故保险金'中所称的合同基本保险 金额及现金价值均不包括因红利分配产生的相关利益。",
+          "section_id": "",
+          "section_title": "身故保险金：",
+          "similarity_score": 0.6194,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安福耀年金保险（分红型）"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "f03d5491-0a82-499e-82d4-e6c6893ee2c7",
+          "content_preview": "[章节:  身故保险金：]\n\n若被保险人身故，我们按下列两者的较大值给付身故保险金，合同终止：\n（1）合同的所交保险费；\n（2）被保险人身故时合同的现金价值。\n以上'特别生存保险金' 、 '生存保险金' 、 '满期生存保险金'及'身故保险金' 中所称的基本保险金额及现金价值均不包括因红利分配产生的相关利益。",
+          "section_id": "",
+          "section_title": " 身故保险金：",
+          "similarity_score": 0.6083,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安安盈年金保险（分红型）"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "20bfbf9f-ae60-412d-9934-b7cb2e4b687f",
+          "content_preview": "[章节: 4.3 保险金申请]\n\n满期生存保险金\n申请所需的证明\n和资料\n15 有效身份证件指由中华人民共和国政府主管部门规定的能够证明其身份的证件，如：有效期内的居民身份证、港澳台居民居 住证、户口簿以及中华人民共和国政府主管部门颁发或者认可的有效护照或者其他身份证明文件。\n1.身故保险金受益人\n您或者被保险人可以指定一人或多人为身故保险金受益人。\n身故保险金受益人为多人时，可以确定受益顺序和受...",
+          "section_id": "4.3",
+          "section_title": "4.3 保险金申请",
+          "similarity_score": 0.5994,
+          "category": "Unknown",
+          "doc_type": "产品条款",
+          "product_name": "平安盈添悦两全保险（分红型）"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "5ffe4222-5710-48ee-bb59-8dc5d201bf3b",
+          "content_preview": "[章节:  身故保险金]\n\n被保险人身故，按照下列两者的较大值给付身故保险金，合同终止：\n1.合同的所交保险费减去已产生的生存保险金；\n2.身故时合同的现金价值。\n若身故时尚未满足生存保险金给付条件，上述'已产生的生存保险金'为零。\n若被保险人身故前变更过生存保险金开始领取年龄、领取期间或领取方式，则上述'已 产生的生存保险金'为根据最后一次变更后的开始领取年龄、领取期间及领取方式重新计算 的已...",
+          "section_id": "",
+          "section_title": " 身故保险金",
+          "similarity_score": 0.5968,
+          "category": "Unknown",
+          "doc_type": "产品说明书",
+          "product_name": "平安御享金越年金保险（分红型）"
+        }
+      ]
+    },
+    {
+      "test_id": "test_exclusion_001",
+      "question": "酒后驾驶会赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 13.18,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_002",
+      "question": "哪些情况不赔?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 13.28,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_003",
+      "question": "自杀赔不赔?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 28.06,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_004",
+      "question": "故意犯罪赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 14.68,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_005",
+      "question": "投保人故意杀害被保险人赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 14.54,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_006",
+      "question": "吸毒导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.65,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_007",
+      "question": "无证驾驶赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.64,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_008",
+      "question": "战争导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.42,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_009",
+      "question": "核辐射导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 13.25,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_010",
+      "question": "犯罪行为导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.83,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_011",
+      "question": "抗拒刑事强制措施赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.41,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_012",
+      "question": "免责条款有哪些?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 12.66,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_013",
+      "question": "醉酒开车赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.66,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_014",
+      "question": "违法行为导致的身故赔吗?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.33,
+      "error": "未返回结果",
+      "mcp_responses": []
+    },
+    {
+      "test_id": "test_exclusion_015",
+      "question": "其他免责情况有哪些?",
+      "query_type": "exclusion",
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "status": "失败",
+      "top_1_similarity": 0.0,
+      "section_ids_matched": [],
+      "category_distribution": {},
+      "mcp_response_count": 0,
+      "execution_time_ms": 11.43,
+      "error": "未返回结果",
+      "mcp_responses": []
+    }
+  ]
+}

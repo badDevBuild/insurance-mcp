@@ -19,6 +19,7 @@ from mcp.types import Tool, TextContent
 from src.mcp_server.tools.search_clause import create_search_clause_tool
 from src.mcp_server.tools.check_exclusion import create_check_exclusion_tool
 from src.mcp_server.tools.surrender_logic import create_surrender_logic_tool
+from src.mcp_server.tools.get_rate_table import tool as get_rate_table_tool
 from src.mcp_server.product_lookup import lookup_product  # T037: 产品查询工具
 from src.common.logging import setup_logging
 
@@ -81,6 +82,11 @@ async def list_tools() -> list[Tool]:
             name=surrender_logic_tool.NAME,
             description=surrender_logic_tool.DESCRIPTION,
             inputSchema=surrender_logic_tool.get_schema()["inputSchema"]
+        ),
+        Tool(
+            name=get_rate_table_tool.NAME,
+            description=get_rate_table_tool.DESCRIPTION,
+            inputSchema=get_rate_table_tool.get_schema()["inputSchema"]
         )
     ]
     
@@ -136,6 +142,11 @@ async def call_tool(name: str, arguments: Any) -> Sequence[TextContent]:
             result = surrender_logic_tool.execute(**arguments)
             # 将SurrenderLogicResult转换为文本
             response_text = _format_surrender_result(result)
+            
+        elif name == get_rate_table_tool.NAME:
+            result = get_rate_table_tool.execute(**arguments)
+            # 将RateTableData转换为文本
+            response_text = _format_rate_table_result(result)
         
         else:
             raise ValueError(f"未知的工具: {name}")
@@ -285,6 +296,34 @@ def _format_surrender_result(result) -> str:
     
     # 对比说明
     lines.append(f"\n{result.comparison_notes}")
+    
+    return "\n".join(lines)
+
+
+def _format_rate_table_result(result) -> str:
+    """格式化RateTableData为可读文本"""
+    lines = [f"【费率表数据】\n"]
+    lines.append(f"表ID: {result.get('table_id')}")
+    lines.append(f"产品: {result.get('product_name')} ({result.get('product_code')})")
+    lines.append(f"类型: {result.get('table_type')}")
+    lines.append(f"来源: 第 {result.get('page_number')} 页")
+    
+    lines.append("\n数据预览:")
+    headers = result.get('headers', [])
+    rows = result.get('rows', [])
+    
+    # 使用Markdown表格格式
+    if headers:
+        lines.append("| " + " | ".join(headers) + " |")
+        lines.append("| " + " | ".join(["---"] * len(headers)) + " |")
+        
+        # 限制显示行数，避免太长
+        display_rows = rows[:20]
+        for row in display_rows:
+            lines.append("| " + " | ".join(row) + " |")
+            
+        if len(rows) > 20:
+            lines.append(f"\n... (共 {len(rows)} 行，仅显示前20行)")
     
     return "\n".join(lines)
 

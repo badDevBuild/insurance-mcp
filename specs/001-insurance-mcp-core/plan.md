@@ -25,7 +25,7 @@
 **存储**:
 - 本地文件系统 (PDF 原件, Markdown 结果)
 - ChromaDB (向量索引)
-- SQLite (元数据管理 - 可选，视 MVP 复杂度而定，暂定文件系统+内存或简单 JSONL)
+- SQLite (元数据管理)
 **测试**: `pytest` (单元测试), `pytest-asyncio` (异步测试)
 **目标平台**: 本地运行 (macOS/Linux), Docker 容器化部署
 **项目类型**: 后端服务 + CLI 工具

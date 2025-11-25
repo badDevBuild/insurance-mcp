@@ -56,7 +56,7 @@
   - 集成到PDFDownloader，所有请求经过限流
   - 通过21个单元测试和集成测试验证
 
-- [ ] T014b [US3] robots.txt 合规性测试与速率限制测试
+- [x] T014b [US3] robots.txt 合规性测试与速率限制测试
   - 单元测试：禁止访问被robots禁止的路径（使用mock robots规则）
   - 集成测试：模拟429/403触发熔断与5分钟冷却
 
@@ -74,8 +74,8 @@
   - 支持产品条款和产品说明书两种文档类型
   - 转换结果保存到data/processed/目录
   - 自动更新数据库中的markdown_content字段
-- [ ] T017 [US2] [P] 实现 `src/parser/ocr/paddle.py` 包装器用于 OCR 回退 (开发时可 mock)
-  - 注：markitdown已能处理大部分PDF，OCR暂不需要
+- [-] T017 [US2] [P] 实现 `src/parser/ocr/paddle.py` 包装器用于 OCR 回退 (开发时可 mock)
+  - 注：markitdown已能处理大部分PDF，OCR暂不需要，已由Docling/MarkItDown取代
 - [x] T018 [US2] **[已完成]** 向 `src/cli/manage.py` 添加 `process` 命令，对 PENDING 文档运行转换器
   - `process convert`: 批量转换PDF到Markdown
   - `process analyze`: 分析PDF版面结构
@@ -253,15 +253,28 @@
     - 对比查询: 1个 (身故vs满期)
     - 免责查询: 2个 (酒驾、免责总览)
     - 文件: `phase5_test_set_v1.json`
-  - **完整版 (待扩展)**: 50个标准问题（基础20 + 对比15 + 专项15）
-  - 人工标注Ground Truth
-  - 实现自动化测试脚本
-    - test_basic_queries: Top-1准确率 ≥ 90%
-    - test_comparison_queries: Top-3包含所有相关条款 ≥ 85%
-    - test_exclusion_queries: 召回率 ≥ 95%
-  - 使用MRR和NDCG@k指标
+  - **完整版扩展计划 (待实施)**: 
+    - **目标**: 扩展至50个标准问题，符合SC-003成功标准要求
+    - **问题分布**: 基础查询20个 + 对比查询15个 + 专项检索15个
+    - **验收标准**:
+      - 基础查询测试: Top-1准确率 ≥ 90%
+      - 对比查询测试: Top-3结果中包含所有相关条款的比例 ≥ 85%
+      - 专项检索测试: 免责条款召回率 ≥ 95%，精确率 ≥ 90%
+    - **实施步骤**:
+      1. 人工标注50个问题的Ground Truth（每个问题对应的所有相关免责条款section_id）
+      2. 更新测试数据集文件（`phase5_test_set_labeled.json`）
+      3. 扩展自动化测试脚本，支持50个问题的批量评估
+      4. 使用MRR和NDCG@k指标进行性能评估
+      5. 生成测试报告，记录失败案例用于优化
+    - **时间线**: 建议在系统稳定运行后，有足够真实数据时进行扩展（预计2-3个工作日）
+    - **依赖**: T025a（MCP工具）、T031（端到端测试）
   - 依赖: T025a（MCP工具）
-  - 工作量: MVP 1天 (已完成) + 完整版 2天 (待扩展)
+  - 工作量: MVP 1天 (已完成) + 完整版扩展 2-3天 (待实施)
+
+- [ ] T028b [US1] **[P1]** 完整版黄金测试集扩展 (50题)
+  - 目标: 扩展至50个标准问题 (基础20 + 对比15 + 专项15)
+  - 步骤: 人工标注Ground Truth -> 更新测试集文件 -> 扩展自动化测试 -> 生成报告
+  - 依赖: T028a
 
 ### 阶段5E: P0增强 - 产品范围检索
 
@@ -349,6 +362,56 @@
     - 修复BM25混合检索持久化问题，添加`config.BM25_INDEX_PATH`配置
     - 修复9个Pydantic V2弃用警告，迁移至ConfigDict
     - 使用真实PDF数据替代Mock数据，提升测试真实性
+
+### 阶段5G: 智能文档类型推断 (FR-012)
+
+**目标**: 在MCP服务器端实现智能文档类型推断，根据查询内容自动选择最合适的文档类型
+
+- [x] T059 [FR-012] **[P1]** 实现智能doc_type推断逻辑 (`src/mcp_server/tools/search_policy_clause.py`)
+  - **实现`_infer_doc_type()`方法**:
+    - 费率表推断：包含"保费"、"费率"等关键词 + 数字 → "产品费率表"
+    - 费率表推断：包含"保费"、"费率"等关键词 + 数字 → "产品费率表"
+    - 其他情况：返回None（查询所有类型），依赖语义检索自动匹配
+  - **集成到`run()`方法**:
+    - 如果客户端未指定`doc_type`，则调用`_infer_doc_type()`进行推断
+    - 记录推断结果到日志
+  - **单元测试**:
+    - 测试各种查询场景的推断准确性
+    - 验证推断准确率 ≥ 80%
+  - 依赖: T041（MCP工具doc_type参数支持）
+  - 工作量: 1天
+
+- [x] T060 [FR-012] **[P1]** 更新测试评估逻辑
+  - 在`TestCaseResult`中添加`doc_type_distribution`字段
+  - 在`_evaluate_case()`中统计返回结果的`doc_type`分布
+  - 在测试报告中显示`doc_type`分布情况
+  - 依赖: T059（智能推断实现）
+  - 工作量: 0.5天
+
+- [x] T061 [FR-013] **[P1]** 扩展ClauseResult结构
+  - 在`src/common/models.py`中为`ClauseResult`添加字段：
+    - `table_refs: List[str]` - 关联的费率表UUID列表
+    - `doc_type: str` - 文档类型
+  - 更新`src/mcp_server/tools/search_policy_clause.py`：
+    - 在构建ClauseResult时从metadata提取`table_refs`和`doc_type`
+    - 处理`table_refs`的序列化格式（逗号分隔字符串）
+  - 更新`SourceRef`的`document_type`字段说明，包含"产品费率表"
+  - 单元测试：验证新字段正确填充
+  - 依赖: T041（MCP工具doc_type支持）
+  - 工作量: 0.5天
+
+- [x] T062 [FR-013] **[P1]** 实现费率表访问工具 (`get_rate_table`)
+  - 创建`src/mcp_server/tools/get_rate_table.py`
+  - 实现`GetRateTableTool`类：
+    - 从`assets/tables/metadata.json`读取元数据
+    - 从`assets/tables/{table_id}.csv`读取CSV数据
+    - 支持简单的行过滤（如年龄=30）
+    - 返回`RateTableData`对象
+  - 在MCP服务器中注册`get_rate_table`工具
+  - 单元测试：测试CSV读取和过滤功能
+  - 集成测试：端到端测试费率表查询流程
+  - 依赖: T061（ClauseResult扩展）
+  - 工作量: 1天
 
 ## 第六阶段：Docling 集成与结构化解析重构 (Phase 6: Docling Integration)
 

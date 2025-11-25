@@ -208,10 +208,15 @@ class SearchPolicyClauseTool:
                         "description": "返回结果数量（默认5）",
                         "default": 5
                     },
-                    "similarity_threshold": {
+                    "min_similarity": {
                         "type": "number",
-                        "description": "相似度阈值（0-1，默认0.7）",
-                        "default": 0.7
+                        "description": "最小相似度阈值(0.0-1.0),默认0.5",
+                        "default": 0.5
+                    },
+                    "auto_fetch_rate_tables": {
+                        "type": "boolean",
+                        "description": "是否自动获取费率表完整数据(Markdown格式),默认False。启用后会在响应中包含rate_table_content字段",
+                        "default": False
                     }
                 },
                 "required": ["query"]

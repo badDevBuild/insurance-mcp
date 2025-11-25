@@ -27,7 +27,7 @@
 
 **验收场景 (Acceptance Scenarios)**:
 
-1. **Given (已知)** 数据库中存在已核验的保险条款，**When (当)** AI 客户端调用 `search_products` 进行模糊查询时（例如："产品 X 承保攀岩吗？"），**Then (那么)** 系统返回具有高语义相似度的相关条款。
+1. **Given (已知)** 数据库中存在已核验的保险条款，**When (当)** AI 客户端调用 `search_policy_clause` 进行模糊查询时（例如："产品 X 承保攀岩吗？"），**Then (那么)** 系统返回具有高语义相似度的相关条款。
 2. **Given (已知)** 查询的产品存在，但没有与查询相关的条款，**When (当)** 进行搜索时，**Then (那么)** 系统返回空结果或"未找到相关条款"，而不是编造答案。
 3. **Given (已知)** 发起查询，**When (当)** 返回结果时，**Then (那么)** 每个结果都包含指向具体文件和章节的 `source_reference`（来源引用）。
 
@@ -83,43 +83,58 @@
 **工具签名**:
 ```python
 def search_policy_clause(
-    query: str,              # 自然语言查询
-    company: Optional[str],  # 保险公司过滤（如"平安人寿"）
-    product: Optional[str],  # 产品名称过滤（如"平安福耀年金保险"）
-    category: Optional[str], # 条款类型过滤（Liability/Exclusion/Process/Definition）
-    top_k: int = 5          # 返回结果数量
+    query: str,                    # 自然语言查询
+    product_code: Optional[str],   # 产品代码（如"P001"）- 与product_name二选一必填
+    product_name: Optional[str],   # 产品名称（如"平安福耀年金保险"）- 与product_code二选一必填
+    company: Optional[str] = None, # 保险公司过滤（如"平安人寿"）
+    doc_type: Optional[str] = None,# 文档类型过滤（产品条款/产品说明书/产品费率表）
+    category: Optional[str] = None,# 条款类型过滤（Liability/Exclusion/Process/Definition）
+    top_k: int = 5,                # 返回结果数量
+    min_similarity: float = 0.3    # 最低相似度阈值（0-1）
 ) -> List[ClauseResult]
 ```
+
+> [!IMPORTANT]
+> **产品参数必填**: `product_code` 和 `product_name` 二选一必须提供。用户查询始终针对具体产品，不支持全局无限定查询。
 
 **返回结构**:
 ```python
 class ClauseResult:
     chunk_id: str                    # Chunk唯一ID
-    content: str                     # 条款原文
-    section_id: str                  # 条款编号（如"1.2.6"）
+    content: str                     # 条款原文（费率表chunk包含引用标记如[费率表: UUID]）
+    section_id: str                  # 条款编号（如"1.2.6"）- 可选，仅侜参考
     section_title: str               # 条款标题
     similarity_score: float          # 相似度分数（0-1）
     source_reference: SourceRef      # 来源引用
+    table_refs: List[str]            # 关联的费率表UUID列表
+    doc_type: str                    # 文档类型（产品条款/产品说明书/产品费率表）
     
 class SourceRef:
     product_name: str                # 产品名称
-    document_type: str               # 文档类型（产品条款/说明书）
+    document_type: str               # 文档类型（产品条款/说明书/费率表）
     pdf_path: str                    # 原始PDF路径
     page_number: int                 # 页码
     download_url: str                # 原始下载链接
 ```
 
-**验收标准**:
-- 查询"这个保险保多久？"能返回"1.4 保险期间"条款
-- 相似度阈值 > 0.7 的结果才返回
-- 必须包含完整的 source_reference
+**费率表处理说明**:
+- 当返回的chunk包含费率表引用时，`table_refs`字段包含费率表UUID列表
+- `content`字段包含费率表引用标记：`[费率表: UUID]`
+- 客户端可通过`table_refs`获取费率表UUID，然后调用`get_rate_table`工具查询CSV数据
+- 部分费率表chunk可能包含完整的Markdown表格（未被分离的情况），此时`table_refs`为空列表
 
-**产品范围检索增强 (合并自原 FR-002a)**:
-- 在 `search_policy_clause` 中新增可选参数 `product_code: Optional[str]`，并明确：
-  - 指定 `product_code` 时，仅在该产品条款范围内检索
-  - 指定 `company` 时，仅在该公司的产品中检索
-  - 未指定时执行全局检索（向后兼容）
-- 数据模型补充：PolicyChunk 必须包含 `company`, `product_code`, `product_name` 元数据字段
+**验收标准**:
+- 查询"平安福耀年金保险的保险期间是多久？"（指定product_name）能返回该产品的"1.4 保险期间"条款
+- 相似度阈值默认为 0.3，并可由客户端自定义
+- 必须包含完整的 source_reference
+- **section_id 和 category 为可选字段**：即使缺失或未能准确提取，只要语义匹配正确即可满足需求
+- **费率表识别为关键**: 系统必须能准确识别和返回费率表文档（doc_type="产品费率表"）
+
+**产品范围检索**:
+- **必须提供 `product_code` 或 `product_name`**：二选一必填，确保查询针对具体产品
+- 指定 `product_code` 或 `product_name` 时，仅在该产品条款范围内检索
+- 指定 `company` 时，在该公司+产品范围内检索
+- 未指定product参数时应返回错误提示
 - 目标效果：在指定产品范围内的查询，Top-K 结果相似度显著提升（基线 0.26 → 0.7+）
 
 ---
@@ -386,9 +401,9 @@ class SurrenderLogicResult:
 
 - **检索模式**:
   1. **Dense Vector Search (语义检索)**:
-     - 使用 OpenAI text-embedding-3-small 生成向量
-     - 基于 ChromaDB 的相似度搜索
-     - 适用场景：模糊查询（如"不交钱了怎么办" → 匹配"效力中止"）
+    - 使用 BGE-small-zh-v1.5 (本地部署) 生成向量
+    - 基于 ChromaDB 的相似度搜索
+    - 适用场景：模糊查询（如"不交钱了怎么办" → 匹配"效力中止"）
   
   2. **Sparse Vector Search (关键词检索)**:
      - 使用 BM25 算法进行精确词汇匹配
@@ -437,6 +452,127 @@ class SurrenderLogicResult:
 
 **合规性**: 此功能直接响应 Constitution 4.1 ("混合检索：支持语义检索（Vector Search）与关键词检索（Keyword Search）的混合模式")。
 
+---
+
+- **FR-012**: 智能文档类型推断 (Intelligent Document Type Inference)
+
+系统必须在MCP服务器端实现智能文档类型推断机制，根据用户查询内容自动推断最合适的文档类型，提升检索准确性。
+
+**设计原则**:
+- **客户端视角**: AI客户端（用户）只提供查询内容，不关心文档类型，无需指定`doc_type`参数
+- **服务器端职责**: MCP服务器应根据查询内容智能推断合适的文档类型
+- **向后兼容**: `doc_type`参数仍作为可选的高级过滤选项，供特殊场景使用
+
+**推断规则**:
+
+1. **费率表推断**:
+   - **触发条件**: 查询包含"保费"、"费率"、"多少钱"、"价格"、"费用"、"成本"等关键词，且包含数字
+   - **推断结果**: `doc_type = "产品费率表"`
+   - **示例查询**: "30岁保费多少"、"费率是多少"、"一年要交多少钱"
+
+2. **其他文档类型**:
+   - **策略**: 不进行显式推断，完全依赖语义检索的相似度排序
+   - **说明**: 产品条款和产品说明书的内容在语义上有自然区分，混合检索能自动返回最相关的结果
+
+4. **默认行为**:
+   - **触发条件**: 无法明确推断文档类型
+   - **推断结果**: `doc_type = None`（查询所有文档类型）
+   - **说明**: 让混合检索在所有类型中自动选择最相关的结果
+
+**实施要求**:
+
+- **实现位置**: `src/mcp_server/tools/search_policy_clause.py`
+- **方法签名**:
+  ```python
+  def _infer_doc_type(self, query: str) -> Optional[str]:
+      """根据查询内容智能推断文档类型
+        
+      Args:
+          query: 用户查询内容
+          
+      Returns:
+          推断的文档类型（"产品条款"/"产品说明书"/"产品费率表"），
+          如果无法确定则返回None
+      """
+  ```
+
+- **集成方式**: 在`run()`方法中，如果客户端未指定`doc_type`参数，则调用`_infer_doc_type()`进行推断
+- **日志记录**: 记录推断结果，便于调试和优化推断规则
+
+**验收标准**:
+- 查询"30岁保费多少"能自动推断为"产品费率表"
+- 查询"如何购买"或"理赔流程"不触发强制推断，而是返回混合检索结果
+- 推断准确率 ≥ 90%（针对费率表场景）
+
+**优先级**: P1（高优先级，直接影响检索准确性）
+
+---
+
+- **FR-013**: 费率表访问工具与ClauseResult结构扩展
+
+系统必须扩展ClauseResult结构，添加费率表相关字段，并提供费率表数据访问工具，使客户端能够获取费率表的CSV数据。
+
+**ClauseResult结构扩展**:
+
+在`ClauseResult`类中添加以下字段：
+- `table_refs: List[str]`: 关联的费率表UUID列表（仅当chunk包含费率表引用时）
+- `doc_type: str`: 文档类型（产品条款/产品说明书/产品费率表）
+
+**实施要求**:
+- **修改位置**: `src/common/models.py` → `ClauseResult`类
+- **更新MCP工具**: `src/mcp_server/tools/search_policy_clause.py` → 在构建ClauseResult时填充新字段
+  ```python
+  clause_result = ClauseResult(
+      # ... 现有字段 ...
+      table_refs=metadata.get('table_refs', '').split(',') if metadata.get('table_refs') else [],
+      doc_type=metadata.get('doc_type', '产品条款')
+  )
+  ```
+
+**费率表访问工具**:
+
+系统必须提供`get_rate_table` MCP工具，用于根据费率表UUID查询CSV数据：
+
+**工具签名**:
+```python
+def get_rate_table(
+    table_id: str,              # 费率表UUID
+    filter_conditions: Optional[Dict[str, Any]] = None  # 过滤条件（如{"年龄": "30"}）
+) -> RateTableData
+```
+
+**返回结构**:
+```python
+class RateTableData:
+    table_id: str                    # 费率表UUID
+    product_code: str                # 产品代码
+    product_name: str                # 产品名称
+    table_type: str                  # 表格类型（RATE_TABLE）
+    headers: List[str]               # 表头列表
+    rows: List[List[str]]            # 数据行列表
+    row_count: int                   # 行数
+    col_count: int                   # 列数
+    source_pdf: str                  # 源PDF路径
+    page_number: int                 # 页码
+    csv_path: str                    # CSV文件路径
+```
+
+**实施要求**:
+- **实现位置**: `src/mcp_server/tools/get_rate_table.py`
+- **数据来源**: 从`assets/tables/{table_id}.csv`读取CSV文件
+- **元数据来源**: 从`assets/tables/metadata.json`读取表格元信息
+- **过滤功能**: 支持简单的行过滤（如年龄=30的行）
+
+**验收标准**:
+- ClauseResult包含`table_refs`和`doc_type`字段
+- 查询费率表相关问题时，返回的ClauseResult包含正确的`table_refs`
+- `get_rate_table`工具能够根据table_id返回完整的表格数据
+- 支持按条件过滤表格行（如"年龄=30"）
+
+**优先级**: P1（高优先级，影响费率查询的完整性）
+
+---
+
 ### 关键实体 (Key Entities)
 
 - **Product (产品)**: 代表逻辑上的保险产品（如："平安福耀年金保险"）。
@@ -469,37 +605,61 @@ class SurrenderLogicResult:
 
 - **SC-001**: MCP API 返回的数据 **100%** 关联至"已核验"的源文档。
 - **SC-002**: 爬虫能在发布后 **24小时** 内成功识别并下载目标站点的新 PDF（取决于运行频率）。
-- **SC-003**: 检索准确性（分层测试）
+- **SC-003**: 检索准确性（分层测试 - 产品级别）
 
 系统的检索能力必须通过以下分层测试：
 
 **测试集**: "保险问答黄金数据集" (共50个问题，覆盖多种场景)
 
+> [!IMPORTANT]
+> **所有测试必须针对具体产品**: 每个测试用例必须明确指定`product_code`或`product_name`，模拟真实用户查询场景。
+
 **分层标准**:
 
+0. **产品查询测试** (10个问题) - **新增**:
+   - **场景**: 根据用户描述查询具体产品ID和产品名称
+   - **工具**: `lookup_product`
+   - **标准**: Top-3 准确率 ≥ 95%
+   - **示例问题**: 
+     - "平安有哪些养老年金产品？" → 应返回"平安福耀年金保险"、"平安颐享天年养老年金保险"等
+     - "盈添悦是什么产品？" → 应返回"平安盈添悦两全保险（分红型）"及product_code
+
 1. **基础查询测试** (20个问题):
-   - **场景**: 单一明确的条款查询（如"保险期间多久？"、"如何申请理赔？"）
-   - **标准**: Top-1 准确率 ≥ 90%
-   - **示例问题**: "犹豫期是多少天？" → 应返回"5.1 犹豫期"条款
+   - **场景**: 针对具体产品的单一明确条款查询
+   - **标准**: Top-1 准确率 ≥ 80%，相似度阈值 = 0.3
+   - **示例问题**: 
+     - "平安福耀年金保险的犹豫期是多少天？" → 应返回该产品的"5.1 犹豫期"条款
+     - "平安盈添悦两全保险的保险期间是多久？" → 应返回该产品的"1.4 保险期间"条款
 
-2. **对比查询测试** (15个问题):
-   - **场景**: 需要同时检索多个相关条款进行对比（如"退保和减额交清的区别？"）
-   - **标准**: Top-3 结果中包含所有相关条款的比例 ≥ 85%
-   - **示例问题**: "减额交清和退保哪个划算？" → 应同时返回"6.4 减额交清"和"5.2 退保"
+2. **对比查询测试** (10个问题):
+   - **场景**: 针对具体产品需要同时检索多个相关条款进行对比
+   - **标准**: Top-5 结果中包含主要相关条款的比例 ≥ 75%
+   - **示例问题**: 
+     - "平安福耀年金保险退保和减额交清的区别？" → 应返回该产品的"6.4 减额交清"和"5.2 退保"
 
-3. **专项检索测试** (15个问题):
-   - **场景**: 针对特定类型条款的精确检索（主要是免责条款）
-   - **标准**: 免责条款召回率 ≥ 95%，精确率 ≥ 90%
-   - **示例问题**: "吸毒导致的意外赔吗？" → 必须返回免责条款，且不能返回非免责条款
+3. **费率表检索测试** (5个问题) - **新增**:
+   - **场景**: 针对具体产品查询费率表信息
+   - **标准**: doc_type识别准确率 = 100%，Top-1准确率 ≥ 90%
+   - **示例问题**:
+     - "平安福耀年金保险30岁男性保费多少？" → 应返回doc_type="产品费率表"的结果
+     - "平安颐享天年的费率表在哪里？" → 应返回该产品的费率表文档
+
+4. **免责条款检索测试** (5个问题):
+   - **场景**: 针对具体产品查询免责条款
+   - **标准**: 免责条款召回率 ≥ 80%，精确率 ≥ 85%
+   - **示例问题**: 
+     - "平安盈添悦两全保险酒驾赔吗？" → 必须返回该产品的免责条款
 
 **评估方法**:
-- 人工标注正确答案（Ground Truth）
-- 使用 MRR (Mean Reciprocal Rank) 和 NDCG@k 指标
-- 每月重新评估，确保持续准确性
+- 人工标注正确答案（Ground Truth）- 每个问题必须标注具体产品
+- 使用MRR (Mean Reciprocal Rank) 和 Recall@k 指标
+- 相似度阈值设置为0.3（可调）
+- section_id和category为可选，仅语义匹配即可
 
 **失败处理**:
-- 如果任一层级测试未达标，禁止上线
-- 分析失败案例，优化切片策略或元数据
+- 如果整体通过率 < 70%，禁止上线
+- 分析失败案例，优化检索策略
+- **重点关注**: 费率表识别失败和产品范围过滤失败
 - **SC-004**: 系统能将已核验文档中的标准保单表格（如利益演示表）解析为可读 Markdown 表格，行列完整性达到 **100%**。
 
 ## 假设与依赖 (Assumptions & Dependencies)
@@ -507,5 +667,5 @@ class SurrenderLogicResult:
 - **假设**: 平安人寿官网"公开信息披露"栏目允许爬取，通过标准 HTTP 请求可访问公开文档库（无阻挡基本访问的复杂验证码）。
 - **假设**: 保险条款主要是基于文本的 PDF，而非扫描图片（虽然提到了 OCR，但为了第一阶段效率，优先处理原生数字 PDF）。
 - **假设**: 第一期仅实现平安人寿公司的爬虫，架构设计需考虑未来扩展到其他保险公司的可扩展性。
-- **依赖**: 访问 **OpenAI API** (用于 `text-embedding-3-small` 模型) 进行向量化。
+- **依赖**: **BGE-small-zh-v1.5** (本地部署，BAAI开源模型) 进行向量化，无需API调用。
 - **依赖**: **ChromaDB (Local)** 作为向量数据库，运行于本地环境或 Docker 中。

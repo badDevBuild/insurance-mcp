@@ -52,5 +52,6 @@ class Config:
         cls.VECTOR_STORE_DIR.mkdir(parents=True, exist_ok=True)
         cls.TABLE_EXPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-config = Config()
+settings = Config()
+config = settings  # Alias for backward compatibility
 

@@ -1,0 +1,1165 @@
+{
+  "name": "Phase5_Golden_Test_Set_Labeled",
+  "version": "2.0.0",
+  "description": "第五阶段核心功能黄金测试集 - 完整标注版（50个问题）",
+  "total_count": 50,
+  "tier_distribution": {
+    "1": 20,
+    "2": 15,
+    "3": 15
+  },
+  "category_distribution": {
+    "basic": 20,
+    "comparison": 15,
+    "exclusion": 15
+  },
+  "test_cases": [
+    {
+      "id": "test_basic_001",
+      "question": "身故保险金怎么赔付?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "身故",
+        "保险金",
+        "给付"
+      ],
+      "expected_section_titles": [
+        "身故保险金",
+        "1.2.6 身故保险金"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含身故保险金相关条款",
+      "expected_section_ids": [
+        "1.2.6"
+      ]
+    },
+    {
+      "id": "test_basic_002",
+      "question": "满期生存保险金的条件是什么?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "满期",
+        "生存",
+        "保险金"
+      ],
+      "expected_section_titles": [
+        "生存保险金",
+        "满期"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含满期生存保险金相关条款",
+      "expected_section_ids": [
+        "1.2"
+      ]
+    },
+    {
+      "id": "test_basic_003",
+      "question": "保险期间是多久?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "保险期间",
+        "终身",
+        "年"
+      ],
+      "expected_section_titles": [
+        "保险期间"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含保险期间说明",
+      "expected_section_ids": [
+        "1.4"
+      ]
+    },
+    {
+      "id": "test_basic_004",
+      "question": "犹豫期是多少天?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "犹豫期",
+        "20日",
+        "天"
+      ],
+      "expected_section_titles": [
+        "5.1 犹豫期",
+        "犹豫期"
+      ],
+      "expected_section_ids": [
+        "5.1"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含犹豫期条款，section_id='5.1'"
+    },
+    {
+      "id": "test_basic_005",
+      "question": "如何申请理赔?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "理赔",
+        "申请",
+        "保险金申请"
+      ],
+      "expected_section_titles": [
+        "4.3 保险金申请",
+        "保险金申请"
+      ],
+      "expected_section_ids": [
+        "4.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含保险金申请流程，section_id='4.3'"
+    },
+    {
+      "id": "test_basic_006",
+      "question": "受益人可以变更吗?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "受益人",
+        "变更",
+        "指定"
+      ],
+      "expected_section_titles": [
+        "保险金申请",
+        "受益人"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含受益人变更相关条款",
+      "expected_section_ids": [
+        "4.3"
+      ]
+    },
+    {
+      "id": "test_basic_007",
+      "question": "保单贷款利息怎么算?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "保单贷款",
+        "利息",
+        "利率"
+      ],
+      "expected_section_titles": [
+        "6.2 保单贷款",
+        "保单贷款"
+      ],
+      "expected_section_ids": [
+        "6.2"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含保单贷款条款，section_id='6.2'"
+    },
+    {
+      "id": "test_basic_008",
+      "question": "什么是现金价值?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "现金价值",
+        "保单"
+      ],
+      "expected_section_titles": [
+        "6.1 现金价值",
+        "现金价值"
+      ],
+      "expected_section_ids": [
+        "6.1"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含现金价值定义，section_id='6.1'"
+    },
+    {
+      "id": "test_basic_009",
+      "question": "宽限期是多久?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "宽限期",
+        "60日",
+        "天"
+      ],
+      "expected_section_titles": [
+        "效力中止",
+        "宽限期"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含宽限期说明",
+      "expected_section_ids": [
+        "3.3"
+      ]
+    },
+    {
+      "id": "test_basic_010",
+      "question": "合同效力中止是什么?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "效力中止",
+        "恢复",
+        "复效"
+      ],
+      "expected_section_titles": [
+        "3.3 效力中止与恢复",
+        "效力中止"
+      ],
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含效力中止条款，section_id='3.3'"
+    },
+    {
+      "id": "test_basic_011",
+      "question": "如何办理复效?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "复效",
+        "恢复",
+        "效力"
+      ],
+      "expected_section_titles": [
+        "3.3 效力中止与恢复",
+        "效力恢复"
+      ],
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含复效相关条款，section_id='3.3'"
+    },
+    {
+      "id": "test_basic_012",
+      "question": "年龄误告怎么办?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "年龄",
+        "错误",
+        "误告"
+      ],
+      "expected_section_titles": [
+        "7.4 年龄错误的处理",
+        "年龄错误"
+      ],
+      "expected_section_ids": [
+        "7.4"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含年龄误告处理条款，section_id='7.4'"
+    },
+    {
+      "id": "test_basic_013",
+      "question": "未成年人身故有限制吗?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "未成年人",
+        "身故",
+        "限制"
+      ],
+      "expected_section_titles": [
+        "7.5 未成年人身故保险 金限制",
+        "未成年人身故"
+      ],
+      "expected_section_ids": [
+        "7.5"
+      ],
+      "expected_category": "General",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含未成年人身故限制，section_id='7.5'"
+    },
+    {
+      "id": "test_basic_014",
+      "question": "什么是保单红利?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "红利",
+        "分红",
+        "保单"
+      ],
+      "expected_section_titles": [
+        "1.3 保单红利",
+        "保单红利"
+      ],
+      "expected_section_ids": [
+        "1.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含保单红利条款，section_id='1.3'"
+    },
+    {
+      "id": "test_basic_015",
+      "question": "保费自动垫交是什么?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "自动垫交",
+        "保费",
+        "垫交"
+      ],
+      "expected_section_titles": [
+        "6.3 自动垫交",
+        "自动垫交"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含自动垫交条款",
+      "expected_section_ids": [
+        "6.3"
+      ]
+    },
+    {
+      "id": "test_basic_016",
+      "question": "合同解除有损失吗?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "解除",
+        "退保",
+        "损失"
+      ],
+      "expected_section_titles": [
+        "5.2 您解除合同的手续 及风险",
+        "解除合同"
+      ],
+      "expected_section_ids": [
+        "5.2"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含解除合同风险说明，section_id='5.2'"
+    },
+    {
+      "id": "test_basic_017",
+      "question": "减额交清怎么办理?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "减额交清",
+        "办理"
+      ],
+      "expected_section_titles": [
+        "6.4 减额交清",
+        "减额交清"
+      ],
+      "expected_section_ids": [
+        "6.4"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含减额交清条款，section_id='6.4'"
+    },
+    {
+      "id": "test_basic_018",
+      "question": "养老金什么时候开始领?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "养老",
+        "领取",
+        "年龄"
+      ],
+      "expected_section_titles": [
+        "1.2.1 首个养老保险金 领取日",
+        "何时领"
+      ],
+      "expected_section_ids": [
+        "1.2.1",
+        "2"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含养老金领取日期条款"
+    },
+    {
+      "id": "test_basic_019",
+      "question": "合同构成有哪些?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "合同构成",
+        "保险单",
+        "条款"
+      ],
+      "expected_section_titles": [
+        "7.1 合同构成",
+        "合同构成"
+      ],
+      "expected_section_ids": [
+        "7.1"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含合同构成条款，section_id='7.1'"
+    },
+    {
+      "id": "test_basic_020",
+      "question": "争议怎么处理?",
+      "query_type": "basic",
+      "expected_keywords": [
+        "争议",
+        "处理",
+        "仲裁"
+      ],
+      "expected_section_titles": [
+        "7.11 争议处理",
+        "7.12 争议处理",
+        "争议处理"
+      ],
+      "expected_section_ids": [
+        "7.11",
+        "7.12"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 1,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含争议处理条款"
+    },
+    {
+      "id": "test_comparison_001",
+      "question": "身故和满期哪个是保险责任?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "身故",
+        "满期",
+        "保险责任"
+      ],
+      "expected_section_titles": [
+        "身故保险金",
+        "满期",
+        "保险责任"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中同时包含身故和满期相关条款",
+      "expected_section_ids": [
+        "1.1",
+        "1.2"
+      ]
+    },
+    {
+      "id": "test_comparison_002",
+      "question": "退保和减额交清的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "退保",
+        "减额交清",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "解除合同",
+        "减额交清"
+      ],
+      "expected_section_ids": [
+        "5.2",
+        "6.4"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含退保和减额交清条款"
+    },
+    {
+      "id": "test_comparison_003",
+      "question": "保单贷款和保费垫交的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "保单贷款",
+        "垫交",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "保单贷款",
+        "自动垫交"
+      ],
+      "expected_section_ids": [
+        "6.2"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含保单贷款和垫交条款"
+    },
+    {
+      "id": "test_comparison_004",
+      "question": "犹豫期内退保和犹豫期后退保的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "犹豫期",
+        "退保",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "犹豫期",
+        "解除合同"
+      ],
+      "expected_section_ids": [
+        "5.1",
+        "5.2"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含犹豫期和解除合同条款"
+    },
+    {
+      "id": "test_comparison_005",
+      "question": "投保人和被保险人的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "投保人",
+        "被保险人",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "投保范围",
+        "合同构成"
+      ],
+      "expected_section_ids": [
+        "7.3"
+      ],
+      "expected_category": "Definition",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含投保人和被保险人定义"
+    },
+    {
+      "id": "test_comparison_006",
+      "question": "受益人和继承人的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "受益人",
+        "继承人",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "保险金申请",
+        "受益人"
+      ],
+      "expected_category": "Definition",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含受益人和继承人相关说明",
+      "expected_section_ids": [
+        "4.3"
+      ]
+    },
+    {
+      "id": "test_comparison_007",
+      "question": "效力中止和合同终止的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "效力中止",
+        "终止",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "效力中止与恢复",
+        "合同终止"
+      ],
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含效力中止和终止条款"
+    },
+    {
+      "id": "test_comparison_008",
+      "question": "累积生息和抵交保费的红利方式区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "累积生息",
+        "抵交保费",
+        "红利"
+      ],
+      "expected_section_titles": [
+        "保单红利"
+      ],
+      "expected_section_ids": [
+        "1.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含红利领取方式说明"
+    },
+    {
+      "id": "test_comparison_009",
+      "question": "生存保险金和特别生存保险金的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "生存保险金",
+        "特别生存",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "生存保险金",
+        "保险责任"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含两种生存保险金条款",
+      "expected_section_ids": [
+        "1.2"
+      ]
+    },
+    {
+      "id": "test_comparison_010",
+      "question": "即期领取和约定年龄领取的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "即期领取",
+        "约定年龄",
+        "领取"
+      ],
+      "expected_section_titles": [
+        "何时领",
+        "开始领取"
+      ],
+      "expected_section_ids": [
+        "2"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含领取方式条款"
+    },
+    {
+      "id": "test_comparison_011",
+      "question": "交清增额保险和基本保险金额的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "交清增额",
+        "基本保险金额",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "保单红利",
+        "保险责任"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含交清增额保险相关条款",
+      "expected_section_ids": [
+        "1.3"
+      ]
+    },
+    {
+      "id": "test_comparison_012",
+      "question": "宽限期内出险和中止期内出险的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "宽限期",
+        "中止期",
+        "出险"
+      ],
+      "expected_section_titles": [
+        "效力中止与恢复"
+      ],
+      "expected_section_ids": [
+        "3.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含宽限期和中止期条款"
+    },
+    {
+      "id": "test_comparison_013",
+      "question": "主险和附加险的关系?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "主险",
+        "附加险",
+        "关系"
+      ],
+      "expected_section_titles": [
+        "合同构成"
+      ],
+      "expected_category": "Definition",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含主附险关系说明",
+      "expected_section_ids": [
+        "7.1"
+      ]
+    },
+    {
+      "id": "test_comparison_014",
+      "question": "趸交和期交的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "趸交",
+        "期交",
+        "区别"
+      ],
+      "expected_section_titles": [
+        "交费方式"
+      ],
+      "expected_category": "Process",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含交费方式说明",
+      "expected_section_ids": [
+        "2"
+      ]
+    },
+    {
+      "id": "test_comparison_015",
+      "question": "身故保险金受益人和生存保险金受益人的区别?",
+      "query_type": "comparison",
+      "expected_keywords": [
+        "身故保险金受益人",
+        "生存保险金受益人"
+      ],
+      "expected_section_titles": [
+        "保险金申请",
+        "受益人"
+      ],
+      "expected_section_ids": [
+        "4.3"
+      ],
+      "expected_category": "Liability",
+      "company": "平安人寿",
+      "tier": 2,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含受益人相关条款"
+    },
+    {
+      "id": "test_exclusion_001",
+      "question": "酒后驾驶会赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "酒后驾驶",
+        "不承担",
+        "免除"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含责任免除条款，section_id='2.1'"
+    },
+    {
+      "id": "test_exclusion_002",
+      "question": "哪些情况不赔?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "不承担",
+        "免除",
+        "责任"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除",
+        "我们不保什么"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含责任免除条款"
+    },
+    {
+      "id": "test_exclusion_003",
+      "question": "自杀赔不赔?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "自杀",
+        "2年",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含自杀相关免责条款"
+    },
+    {
+      "id": "test_exclusion_004",
+      "question": "故意犯罪赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "故意犯罪",
+        "刑事强制措施",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含故意犯罪免责条款"
+    },
+    {
+      "id": "test_exclusion_005",
+      "question": "投保人故意杀害被保险人赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "投保人",
+        "故意杀害",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含故意杀害免责条款"
+    },
+    {
+      "id": "test_exclusion_006",
+      "question": "吸毒导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "吸毒",
+        "毒品",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "责任免除"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含吸毒相关免责条款",
+      "expected_section_ids": [
+        "2.1"
+      ]
+    },
+    {
+      "id": "test_exclusion_007",
+      "question": "无证驾驶赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "无证驾驶",
+        "驾驶",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "责任免除"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含无证驾驶免责条款",
+      "expected_section_ids": [
+        "2.1"
+      ]
+    },
+    {
+      "id": "test_exclusion_008",
+      "question": "战争导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "战争",
+        "军事冲突",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "责任免除"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含战争免责条款",
+      "expected_section_ids": [
+        "2.1"
+      ]
+    },
+    {
+      "id": "test_exclusion_009",
+      "question": "核辐射导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "核辐射",
+        "核爆炸",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "责任免除"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含核辐射免责条款",
+      "expected_section_ids": [
+        "2.1"
+      ]
+    },
+    {
+      "id": "test_exclusion_010",
+      "question": "犯罪行为导致身故赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "犯罪",
+        "刑事",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含犯罪免责条款"
+    },
+    {
+      "id": "test_exclusion_011",
+      "question": "抗拒刑事强制措施赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "刑事强制措施",
+        "抗拒",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含抗拒强制措施免责条款"
+    },
+    {
+      "id": "test_exclusion_012",
+      "question": "免责条款有哪些?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "免责",
+        "不承担",
+        "免除"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除",
+        "其他免责条款"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含责任免除相关条款"
+    },
+    {
+      "id": "test_exclusion_013",
+      "question": "醉酒开车赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "醉酒",
+        "酒后驾驶",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含酒驾免责条款"
+    },
+    {
+      "id": "test_exclusion_014",
+      "question": "违法行为导致的身故赔吗?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "违法",
+        "犯罪",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "2.1 责任免除",
+        "责任免除"
+      ],
+      "expected_section_ids": [
+        "2.1"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含违法行为免责条款"
+    },
+    {
+      "id": "test_exclusion_015",
+      "question": "其他免责情况有哪些?",
+      "query_type": "exclusion",
+      "expected_keywords": [
+        "其他免责",
+        "免责条款",
+        "不承担"
+      ],
+      "expected_section_titles": [
+        "其他免责条款",
+        "责任免除"
+      ],
+      "expected_category": "Exclusion",
+      "company": "平安人寿",
+      "tier": 3,
+      "top_k": 5,
+      "min_similarity_score": 0.5,
+      "success_criteria": "Top-5结果中包含其他免责条款",
+      "expected_section_ids": [
+        "2.1"
+      ]
+    }
+  ]
+}

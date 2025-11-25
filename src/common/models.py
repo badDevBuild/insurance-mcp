@@ -355,6 +355,12 @@ class ClauseResult(BaseModel):
     section_title: str = Field(..., description="条款标题")
     similarity_score: float = Field(..., ge=0.0, le=1.0, description="相似度分数（0-1）")
     source_reference: SourceRef = Field(..., description="来源引用")
+    table_refs: List[str] = Field(default_factory=list, description="关联的费率表UUID列表")
+    doc_type: str = Field(default="产品条款", description="文档类型")
+    rate_table_content: Optional[str] = Field(
+        default=None, 
+        description="费率表Markdown内容(仅当auto_fetch_rate_tables=True时填充)"
+    )
     
     model_config = ConfigDict(
         json_schema_extra={

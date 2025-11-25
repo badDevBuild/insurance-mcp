@@ -20,16 +20,42 @@ class SearchPolicyClauseTool(BaseTool):
     使用混合检索技术（语义+关键词），并返回置信度评分。
     """
     
+    def _infer_doc_type(self, query: str) -> Optional[str]:
+        """根据查询内容智能推断文档类型
+        
+        Args:
+            query: 用户查询内容
+            
+        Returns:
+            推断的文档类型（"产品条款"/"产品说明书"/"产品费率表"），
+            如果无法确定则返回None
+        """
+        query_lower = query.lower()
+        
+        # 1. 费率表推断
+        # 触发条件: 包含费率关键词 且 包含数字
+        rate_keywords = ["保费", "费率", "多少钱", "价格", "费用", "成本", "交多少"]
+        has_digit = any(char.isdigit() for char in query)
+        if any(kw in query_lower for kw in rate_keywords) and has_digit:
+            logger.info(f"推断文档类型: 产品费率表 (query='{query}')")
+            return "产品费率表"
+            
+        # 2. 其他情况
+        # 不进行显式推断，完全依赖语义检索的相似度排序
+        # 产品条款和产品说明书的内容在语义上有自然区分
+        return None
+    
     def run(
         self,
         query: str,
-        company: Optional[str] = None,
-        product_code: Optional[str] = None,  # P0增强: 产品代码过滤
+        product_code: Optional[str] = None,
         product_name: Optional[str] = None,
-        doc_type: Optional[str] = None,  # FR-005: 文档类型过滤
+        company: Optional[str] = None,
+        doc_type: Optional[str] = None,
         category: Optional[str] = None,
         n_results: int = 5,
-        min_similarity: float = -1.0
+        min_similarity: float = 0.5,
+        auto_fetch_rate_tables: bool = False
     ) -> List[ClauseResult]:
         """执行检索
         
@@ -42,11 +68,26 @@ class SearchPolicyClauseTool(BaseTool):
             category: 条款类型过滤 (Liability/Exclusion/Process/Definition)
             n_results: 返回结果数量
             min_similarity: 最小相似度阈值 (0.0-1.0)
+            auto_fetch_rate_tables: 是否自动获取费率表完整数据(默认False)
             
         Returns:
             ClauseResult列表
         """
-        logger.info(f"执行search_policy_clause: query='{query}', company={company}, product_code={product_code}, doc_type={doc_type}, category={category}")
+        # 0. 参数验证: product_code 或 product_name 必须提供一个
+        if not product_code and not product_name:
+            raise ValueError(
+                "product_code 或 product_name 必须提供一个。\n"
+                "用户查询始终针对具体产品，请指定 product_code 或 product_name 参数。\n"
+                "例如: product_name='平安福耀年金保险（分红型）'"
+            )
+        
+        logger.info(f"执行search_policy_clause: query='{query}', product_code={product_code}, product_name={product_name}, company={company}, doc_type={doc_type}, category={category}")
+        
+        # 1. 智能文档类型推断 (FR-012)
+        if not doc_type:
+            doc_type = self._infer_doc_type(query)
+            if doc_type:
+                logger.info(f"应用推断的文档类型: {doc_type}")
         
         # 1. 生成查询向量
         query_embedding = self.embed_query(query)
@@ -98,12 +139,47 @@ class SearchPolicyClauseTool(BaseTool):
                 section_id=metadata.get('section_id', ''),
                 section_title=metadata.get('section_title', ''),
                 similarity_score=similarity,
-                source_reference=self._format_source_ref(res)
+                source_reference=self._format_source_ref(res),
+                table_refs=metadata.get('table_refs', '').split(',') if metadata.get('table_refs') else [],
+                doc_type=metadata.get('doc_type', '产品条款')
             )
             clause_results.append(clause_result)
             
             if len(clause_results) >= n_results:
                 break
+        
+        # 5. 自动获取费率表数据(如果需要)
+        if auto_fetch_rate_tables:
+            from src.mcp_server.tools.get_rate_table import get_rate_table
+            
+            for result in clause_results:
+                if result.table_refs:
+                    try:
+                        # 获取第一个费率表的数据
+                        table_id = result.table_refs[0]
+                        rate_table = get_rate_table(table_id)
+                        
+                        # 转换为Markdown格式
+                        if rate_table and rate_table.table_data:
+                            md_lines = ["## 费率表数据\n"]
+                            
+                            # 表头
+                            headers = rate_table.table_data.headers
+                            md_lines.append("| " + " | ".join(headers) + " |")
+                            md_lines.append("| " + " | ".join(["---"] * len(headers)) + " |")
+                            
+                            # 表格数据
+                            for row in rate_table.table_data.rows[:20]:  # 最多显示20行
+                                md_lines.append("| " + " | ".join(str(cell) for cell in row) + " |")
+                            
+                            if len(rate_table.table_data.rows) > 20:
+                                md_lines.append(f"\n*(...还有{len(rate_table.table_data.rows) - 20}行数据)*")
+                            
+                            result.rate_table_content = "\n".join(md_lines)
+                            logger.info(f"已为chunk {result.chunk_id[:8]}自动获取费率表数据")
+                    except Exception as e:
+                        logger.warning(f"获取费率表{table_id}数据失败: {e}")
+                        # 失败不影响整体结果,继续
                 
         return clause_results
 
