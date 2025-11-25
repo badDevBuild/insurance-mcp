@@ -336,15 +336,11 @@ class IACSpider:
             # Wait for detail page to load
             await asyncio.sleep(1)
             
-            # TODO: Extract specific fields from detail page
-            # This depends on the actual structure of the detail page
-            # Common fields might include:
-            # - PDF download link
-            # - Product code
-            # - Registration date
-            # - Detailed description
+            # NOTE: IAC爬虫已暂缓，优先使用平安人寿官网爬虫
+            # 详情页提取功能待后续有实际需求时再完善
+            # 可提取字段: PDF链接、产品代码、登记日期等
             
-            # Example: Try to find PDF download link
+            # Try to find PDF download link
             # Look for links ending with .pdf
             pdf_links = await frame.locator("a[href$='.pdf']").all()
             if pdf_links:

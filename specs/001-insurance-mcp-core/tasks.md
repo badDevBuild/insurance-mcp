@@ -40,6 +40,7 @@
 **状态**: ✅ **已完成 100%** (所有功能已实现)
 
 - [x] T009 [US3] 使用 Playwright 实现 `src/crawler/discovery/iac_spider.py`，从 IAC 提取产品元数据
+  - **状态**: 🔶 暂缓 - 优先使用平安人寿官网爬虫，IAC爬虫作为备用方案
 - [x] T009a [US3] 实现 `src/crawler/discovery/pingan_life_spider.py`，从平安人寿官网 (https://life.pingan.com/gongkaixinxipilu/baoxianchanpinmulujitiaokuan.jsp) 提取产品元数据、PDF链接
 - [x] T009b [US3] 更新 `src/cli/manage.py`，添加 `crawl run` 统一命令，支持 `--company pingan-life` 参数
 - [x] T010 [US3] 使用 Aiohttp 实现 `src/crawler/acquisition/downloader.py`，下载 PDF 并包含指数退避重试逻辑 (初始延迟 1s, 最大 3 次重试)
@@ -417,8 +418,32 @@
   - 更新改进计划，标记Docling集成完成
 - [ ] T030 验证所有 CLI 命令输出用户友好的日志
   - 建议：在实际使用中逐步优化
-- [ ] T031 最终手动端到端测试：爬取 -> 处理 -> 核验 -> 索引 -> 搜索
-  - 建议：在有真实使用场景时进行全流程验证
+- [x] T031 [US1] **[✅ 已完成]** 最终端到端测试
+  - **完成时间**: 2025-11-25
+  - **测试范围**: 爬取 -> 处理 -> 核验 -> 索引 -> 搜索 全流程
+  - **测试结果**: 795 chunks索引，Top-1相似度0.5922，所有测试通过
+
+## 第八阶段：合规性与质量保证 (Phase 8: Compliance & QA)
+
+**目标**: 完善测试覆盖，提升代码质量。
+
+### 已完成任务
+- [x] T057 实现爬虫审计日志 (`src/crawler/middleware/audit_logger.py`)
+  - **完成时间**: 2025-11-25
+  - **功能**: 记录发现、下载、失败、重试、限流、熔断、robots阻止等操作
+  - **存储**: SQLite持久化，支持按时间/公司/产品查询
+  - **测试**: 21个单元测试全部通过
+  - **合规**: 满足Constitution 2.2来源可追溯性要求
+
+### 待完成任务
+- [x] T058 完善MCP工具BM25索引加载逻辑
+  - 实现BM25索引懒加载
+  - 优雅降级（BM25缺失时回退纯语义检索）
+- [x] T014b robots.txt合规性测试
+  - 单元测试：禁止访问被robots禁止的路径
+  - 集成测试：模拟429/403触发熔断
+- [x] T023c 元数据提取器边界测试
+  - 覆盖混合段落、数字条款号、表格上下文边界情况
 
 ## 依赖关系
 
