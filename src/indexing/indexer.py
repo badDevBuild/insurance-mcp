@@ -191,22 +191,26 @@ class PolicyIndexer:
         
         for elem in parsed_doc.elements:
             if isinstance(elem, DocTable):
-                is_rate = self.table_classifier.is_rate_table(elem)
+                # ========================================
+                # 默认导出策略: 3行以上表格全部导出
+                # 理由: 避免遗漏重要的结构化数据
+                # ========================================
+                should_export = len(elem.rows) >= 3  # 简单判断：中大型表格
                 
-                if is_rate and config.ENABLE_TABLE_SEPARATION:
-                    # 导出费率表到CSV
+                if should_export and config.ENABLE_TABLE_SEPARATION:
+                    # 导出为CSV
                     table_id = self.table_serializer.serialize_rate_table(
                         table=elem,
                         product_code=product.product_code,
                         source_pdf=str(pdf_path)
                     )
                     rate_table_refs.append(table_id)
-                    logger.info(f"[Docling] 导出费率表: {table_id} (page {elem.page_number})")
+                    logger.info(f"[Docling] 导出表格: {table_id} ({len(elem.rows)}行×{len(elem.headers or [])}列)")
                     
                     # 在markdown中插入引用标记
-                    markdown_elements.append(f"\n[费率表: {table_id}]\n")
+                    markdown_elements.append(f"\n[table: {table_id}]\n")
                 else:
-                    # 普通表格：转为Markdown表格
+                    # 小表格（<3行）：保留为Markdown表格
                     markdown_elements.append(self._table_to_markdown(elem))
             else:
                 # 文本或标题
@@ -249,6 +253,19 @@ class PolicyIndexer:
         # Step 6: 使用MetadataExtractor补充元数据
         chunks = self._enrich_metadata(chunks)
         
+        # Step 7: 保存Markdown文件到data/processed (用于人工检查)
+        try:
+            md_output_path = config.PROCESSED_DATA_DIR / f"{document.id}.md"
+            config.PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+            
+            # 保存完整的Markdown内容
+            with open(md_output_path, 'w', encoding='utf-8') as f:
+                f.write(markdown_content)
+            
+            logger.info(f"[Docling] 已保存Markdown: {md_output_path.name}")
+        except Exception as e:
+            logger.warning(f"保存Markdown文件失败: {e}")
+        
         return chunks
     
     def _index_legacy(
@@ -277,7 +294,14 @@ class PolicyIndexer:
         
         # 转换为PolicyChunk
         chunks = []
+        import re
+        
         for chunk_dict in chunk_dicts:
+            # 尝试从内容中提取table_refs
+            # 格式: [table: uuid]
+            content = chunk_dict['content']
+            table_refs = re.findall(r'\[table:\s*([a-f0-9\-]+)\]', content)
+            
             chunk = PolicyChunk(
                 id=str(uuid.uuid4()),
                 document_id=document.id,
@@ -285,13 +309,13 @@ class PolicyIndexer:
                 product_code=product.product_code,
                 product_name=product.name,
                 doc_type=document.doc_type,
-                content=chunk_dict['content'],
+                content=content,
                 section_id=chunk_dict['section_id'],
                 section_title=chunk_dict['section_title'],
                 section_path=chunk_dict['section_path'],
                 level=chunk_dict['level'],
                 chunk_index=chunk_dict['chunk_index'],
-                table_refs=[],  # Legacy模式无表格引用
+                table_refs=table_refs,  # 提取到的表格引用
                 created_at=datetime.now()
             )
             chunks.append(chunk)

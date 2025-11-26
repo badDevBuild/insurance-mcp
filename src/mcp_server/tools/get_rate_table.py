@@ -55,10 +55,17 @@ class GetRateTableTool(BaseTool):
             raise FileNotFoundError(f"元数据文件不存在: {metadata_path}")
             
         with open(metadata_path, 'r', encoding='utf-8') as f:
-            metadata_list = json.load(f)
+            metadata = json.load(f)
             
         # 2. 查找表格元数据
-        table_meta = next((item for item in metadata_list if item['id'] == table_id), None)
+        # 支持两种格式: 字典(键为table_id)或列表
+        if isinstance(metadata, dict):
+            # 字典格式: {table_id: {...}, ...}
+            table_meta = metadata.get(table_id)
+        else:
+            # 列表格式: [{id: table_id, ...}, ...]
+            table_meta = next((item for item in metadata if item['id'] == table_id), None)
+            
         if not table_meta:
             raise ValueError(f"未找到ID为 {table_id} 的费率表")
             

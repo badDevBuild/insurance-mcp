@@ -1,0 +1,224 @@
+{
+    "questions": [
+        {
+            "id": 1,
+            "question": "平安福耀年金保险的保险期间是多久？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "1.4",
+                "section_title": "保险期间",
+                "key_phrase": "被保险人终身",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 2,
+            "question": "犹豫期是多少天？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "5.1",
+                "section_title": "犹豫期",
+                "key_phrase": "20日",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 3,
+            "question": "什么是被保险人？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "1",
+                "section_title": "常用术语介绍",
+                "key_phrase": "受保险合同保障的人",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 4,
+            "question": "保险责任包括哪些？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "1.2",
+                "section_title": "保险责任",
+                "key_phrase": "生存保险金、特别生存保险金、身故保险金",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 5,
+            "question": "生存保险金什么时候给付？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "1.2",
+                "section_title": "保险责任",
+                "key_phrase": "第5个保单周年日开始",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 6,
+            "question": "特别生存保险金给付条件是什么？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "1.2",
+                "section_title": "保险责任",
+                "key_phrase": "第5个、第6个及第7个保单周年日",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 7,
+            "question": "身故保险金如何计算？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "1.2",
+                "section_title": "保险责任",
+                "key_phrase": "所交保险费和现金价值的较大值",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 8,
+            "question": "宽限期是多长时间？",
+            "category": "basic",
+            "expected_answer": {
+                "section_id": "3.2",
+                "section_title": "宽限期",
+                "key_phrase": "60日",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 9,
+            "question": "退保和减额交清有什么区别？",
+            "category": "comparison",
+            "expected_answer": {
+                "section_id": "5.2,6.4",
+                "section_title": "退保,减额交清",
+                "key_phrase": "退保获得现金价值、减额交清降低基本保险金额",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 10,
+            "question": "生存保险金和特别生存保险金的区别？",
+            "category": "comparison",
+            "expected_answer": {
+                "section_id": "1.2",
+                "section_title": "保险责任",
+                "key_phrase": "生存保险金每年给付、特别生存保险金仅3次",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 11,
+            "question": "趸交和年交的保费差异？",
+            "category": "comparison",
+            "expected_answer": {
+                "section_id": "",
+                "section_title": "基本保险金额表",
+                "key_phrase": "趸交金额较低、年交金额较高",
+                "doc_type": "产品费率表"
+            }
+        },
+        {
+            "id": 12,
+            "question": "产品条款和产品说明书中对红利的描述有何不同？",
+            "category": "comparison",
+            "expected_answer": {
+                "section_id": "1.3",
+                "section_title": "保单红利",
+                "key_phrase": "条款详细、说明书简化",
+                "doc_type": "产品条款,产品说明书"
+            }
+        },
+        {
+            "id": 13,
+            "question": "30岁男性年交保费1000元，基本保险金额是多少？",
+            "category": "rate",
+            "expected_answer": {
+                "section_id": "",
+                "section_title": "基本保险金额表",
+                "key_phrase": "69元",
+                "doc_type": "产品费率表"
+            }
+        },
+        {
+            "id": 14,
+            "question": "40岁女性趸交的基本保险金额是多少？",
+            "category": "rate",
+            "expected_answer": {
+                "section_id": "",
+                "section_title": "基本保险金额表",
+                "key_phrase": "26元",
+                "doc_type": "产品费率表"
+            }
+        },
+        {
+            "id": 15,
+            "question": "哪个年龄段的基本保险金额最高？",
+            "category": "rate",
+            "expected_answer": {
+                "section_id": "",
+                "section_title": "基本保险金额表",
+                "key_phrase": "0-5岁",
+                "doc_type": "产品费率表"
+            }
+        },
+        {
+            "id": 16,
+            "question": "5年交和10年交在50岁时的基本保险金额对比？",
+            "category": "rate",
+            "expected_answer": {
+                "section_id": "",
+                "section_title": "基本保险金额表",
+                "key_phrase": "男性5年交96、10年交174",
+                "doc_type": "产品费率表"
+            }
+        },
+        {
+            "id": 17,
+            "question": "酒驾属于免责范围吗？",
+            "category": "exclusion",
+            "expected_answer": {
+                "section_id": "2.2",
+                "section_title": "其他免责条款",
+                "key_phrase": "酒后驾驶",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 18,
+            "question": "自杀在什么情况下不赔？",
+            "category": "exclusion",
+            "expected_answer": {
+                "section_id": "2.1",
+                "section_title": "责任免除",
+                "key_phrase": "合同成立或效力恢复2年内自杀",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 19,
+            "question": "责任免除条款有哪些？",
+            "category": "exclusion",
+            "expected_answer": {
+                "section_id": "2.1",
+                "section_title": "责任免除",
+                "key_phrase": "故意杀害、故意犯罪、自杀",
+                "doc_type": "产品条款"
+            }
+        },
+        {
+            "id": 20,
+            "question": "被保险人故意犯罪身故会赔吗？",
+            "category": "exclusion",
+            "expected_answer": {
+                "section_id": "2.1",
+                "section_title": "责任免除",
+                "key_phrase": "不承担给付身故保险金的责任",
+                "doc_type": "产品条款"
+            }
+        }
+    ]
+}

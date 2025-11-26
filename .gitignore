@@ -28,3 +28,22 @@ data/db/*
 !data/db/.gitkeep
 data/vector_store/*
 !data/vector_store/.gitkeep
+
+# Test reports and temporary files
+test_report_*.json
+test_report_*.md
+test_qa_review_*.md
+test_qa_review_summary.md
+reports/
+
+# Temporary test scripts
+test_docling_optimization.py
+fix_markdown.py
+debug_chroma.py
+
+# Assets and data
+assets/tables/
+data/llm_test/
+
+# Test directories
+tests/manual/

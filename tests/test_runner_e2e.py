@@ -89,11 +89,16 @@ class EndToEndTestRunner:
             start_time = time.time()
             
             # 调用MCP工具
+            # 如果测试用例未指定产品，默认使用"平安福耀年金保险（分红型）"
+            product_name = test_case.get('product_name') or "平安福耀年金保险（分红型）"
+            
             mcp_response = self.search_tool.run(
                 query=test_case['question'],
                 company=test_case.get('company', '平安人寿'),
+                product_name=product_name,
                 n_results=result.top_k,
-                min_similarity=result.min_similarity
+                min_similarity=result.min_similarity,
+                auto_fetch_rate_tables=True
             )
             
             result.execution_time = time.time() - start_time
@@ -161,7 +166,8 @@ class EndToEndTestRunner:
                     "similarity_score": round(r.similarity_score, 4),
                     "category": getattr(r, 'category', 'Unknown'),
                     "doc_type": r.doc_type if hasattr(r, 'doc_type') else '产品条款',
-                    "product_name": r.source_reference.product_name
+                    "product_name": r.source_reference.product_name,
+                    "rate_table_content": r.rate_table_content  # 添加表格内容
                 }
                 for i, r in enumerate(result.mcp_response)
             ]
@@ -219,8 +225,19 @@ class EndToEndTestRunner:
                 lines.append("\n**MCP返回结果**:\n")
                 for j, r in enumerate(result.mcp_response, 1):
                     lines.append(f"\n{j}. **{r.section_title}** (章节: {r.section_id}, 相似度: {r.similarity_score:.4f})")
-                    content_preview = r.content[:150].replace('\n', ' ')
-                    lines.append(f"   > {content_preview}...\n")
+                    
+                    # 展示内容预览
+                    content_preview = r.content[:300].replace('\n', ' ') + "..."
+                    lines.append(f"   > {content_preview}\n")
+                    
+                    # 如果有表格内容，展示出来
+                    if r.rate_table_content:
+                        lines.append("\n   **📊 附带表格数据**:\n")
+                        # 缩进表格内容以便阅读
+                        table_lines = r.rate_table_content.split('\n')
+                        for tl in table_lines:
+                            lines.append(f"   {tl}")
+                        lines.append("\n")
             
             lines.append("\n" + "-" * 80 + "\n")
         

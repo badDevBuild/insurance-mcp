@@ -1,19 +1,39 @@
 from pathlib import Path
 from typing import List, Any
-from docling.document_converter import DocumentConverter
+from docling.document_converter import DocumentConverter, PdfFormatOption
 from docling.datamodel.document import DocItem, SectionHeaderItem, TableItem, TextItem, PictureItem
 from docling.datamodel.base_models import InputFormat
+from docling.datamodel.pipeline_options import PdfPipelineOptions, TableStructureOptions
 
 from .base import BaseParser, ParsedDocument, DocElement, DocTable
 
 class DoclingParser(BaseParser):
     """
     High-fidelity PDF parser using Docling (v2.0+)
+    
+    优化配置:
+    - mode=accurate: 使用精确模式识别表格
+    - min_confidence=0.4: 降低阈值以识别更多表格
     """
     
     def __init__(self):
+        # 优化表格识别配置
+        pipeline_options = PdfPipelineOptions(
+            do_table_structure=True,
+            do_ocr=False,
+            images_scale=1.0,
+            table_structure_options=TableStructureOptions(
+                mode="accurate",       # 精确模式（比fast慢但更准确）
+            )
+        )
+        
         self.converter = DocumentConverter(
-            allowed_formats=[InputFormat.PDF]
+            allowed_formats=[InputFormat.PDF],
+            format_options={
+                InputFormat.PDF: PdfFormatOption(
+                    pipeline_options=pipeline_options
+                )
+            }
         )
 
     def parse(self, pdf_path: Path) -> ParsedDocument:

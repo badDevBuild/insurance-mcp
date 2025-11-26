@@ -165,8 +165,8 @@ class PolicyChunk(BaseModel):
         category_val = self.category
         if hasattr(category_val, 'value'):
             category_val = category_val.value
-            
-            metadata = {
+        
+        metadata = {
             "document_id": self.document_id,
             # 产品上下文
             "company": self.company,

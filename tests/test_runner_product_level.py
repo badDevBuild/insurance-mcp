@@ -39,6 +39,26 @@ class ProductLevelTestResult:
         
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典"""
+        # 格式化响应内容
+        formatted_responses = []
+        for resp in self.response:
+            if hasattr(resp, 'model_dump'):
+                # ClauseResult对象
+                formatted_responses.append({
+                    "content": resp.content[:500] if hasattr(resp, 'content') else '',
+                    "section_title": getattr(resp, 'section_title', ''),
+                    "section_id": getattr(resp, 'section_id', ''),
+                    "similarity_score": getattr(resp, 'similarity_score', 0),
+                    "doc_type": getattr(resp, 'doc_type', ''),
+                })
+            elif isinstance(resp, dict):
+                # 产品查询结果
+                formatted_responses.append({
+                    "product_name": resp.get('product_name', ''),
+                    "company": resp.get('company', ''),
+                    "similarity": resp.get('similarity', 0)
+                })
+        
         return {
             "test_id": self.test_id,
             "category": self.category,
@@ -46,6 +66,7 @@ class ProductLevelTestResult:
             "product_name": self.product_name,
             "status": self.status,
             "response_count": len(self.response),
+            "responses": formatted_responses,
             "execution_time_ms": round(self.execution_time * 1000, 2),
             "doc_type_correct": self.doc_type_correct,
             "error": self.error
@@ -237,6 +258,75 @@ class ProductLevelTestRunner:
                     lines.append(f"**错误**: {result.error}\n")
                 if result.doc_type_correct is not None:
                     lines.append(f"**doc_type正确**: {result.doc_type_correct}\n")
+    
+    def generate_qa_review_report(self, output_path: str):
+        """生成包含所有问题和答案的审阅报告"""
+        lines = ["# 测试问答详细审阅报告\n"]
+        lines.append(f"**测试集**: {self.test_data['name']}\n")
+        lines.append(f"**执行时间**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        lines.append(f"**测试用例总数**: {len(self.results)}\n")
+        lines.append(f"**通过**: {sum(1 for r in self.results if r.status == '通过')} | **失败**: {sum(1 for r in self.results if r.status == '失败')}\n")
+        
+        lines.append("\n---\n")
+        
+        # 按类别组织
+        categories = {
+            "product_lookup": "产品查询",
+            "basic_query": "基础查询", 
+            "comparison_query": "对比查询",
+            "rate_table_query": "费率表查询",
+            "exclusion_query": "免责查询"
+        }
+        
+        for cat_key, cat_name in categories.items():
+            cat_results = [r for r in self.results if r.category == cat_key]
+            if not cat_results:
+                continue
+            
+            lines.append(f"\n## {cat_name}\n")
+            
+            for i, result in enumerate(cat_results, 1):
+                status_icon = "✅" if result.status == "通过" else ("❌" if result.status == "失败" else "⚠️")
+                lines.append(f"\n### {i}. {status_icon} {result.test_id}\n")
+                lines.append(f"**问题**: {result.question}\n")
+                if result.product_name:
+                    lines.append(f"**产品**: {result.product_name}\n")
+                lines.append(f"**状态**: {result.status}\n")
+                
+                # 显示答案
+                if result.response:
+                    lines.append(f"\n**答案** ({len(result.response)}条结果):\n")
+                    
+                    for j, resp in enumerate(result.response[:5], 1):  # 最多显示前5条
+                        if hasattr(resp, 'section_title'):
+                            # 条款查询结果
+                            sim_score = getattr(resp, 'similarity_score', 0)
+                            lines.append(f"\n{j}. **{resp.section_title}** (相似度: {sim_score:.4f})\n")
+                            if hasattr(resp, 'section_id') and resp.section_id:
+                                lines.append(f"   - 章节ID: {resp.section_id}\n")
+                            if hasattr(resp, 'doc_type'):
+                                lines.append(f"   - 文档类型: {resp.doc_type}\n")
+                            if hasattr(resp, 'content'):
+                                content_preview = resp.content[:300].replace('\n', ' ')
+                                lines.append(f"   - 内容: {content_preview}...\n")
+                        elif isinstance(resp, dict) and 'product_name' in resp:
+                            # 产品查询结果
+                            lines.append(f"\n{j}. **{resp['product_name']}**\n")
+                            lines.append(f"   - 公司: {resp.get('company', 'N/A')}\n")
+                            lines.append(f"   - 相似度: {resp.get('similarity', 0):.4f}\n")
+                else:
+                    lines.append(f"\n**答案**: 无结果返回\n")
+                
+                if result.error:
+                    lines.append(f"\n**错误**: {result.error}\n")
+                
+                lines.append("\n---\n")
+        
+        # 保存
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(lines))
+        
+        logger.info(f"问答审阅报告已保存到: {output_path}")
         
         # 保存
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -262,6 +352,11 @@ if __name__ == "__main__":
     runner.generate_detailed_report(str(json_report_path))
     runner.generate_markdown_report(str(md_report_path))
     
+    # 生成问答审阅报告
+    qa_report_path = project_root / f"test_qa_review_{timestamp}.md"
+    runner.generate_qa_review_report(str(qa_report_path))
+    
     print(f"\n✅ 测试完成!")
     print(f"📄 详细报告(JSON): {json_report_path}")
     print(f"📄 可读报告(Markdown): {md_report_path}")
+    print(f"📋 问答审阅报告: {qa_report_path}")

@@ -161,30 +161,35 @@ class SearchPolicyClauseTool(BaseTool):
         
         # 5. 自动获取费率表数据(如果需要)
         if auto_fetch_rate_tables:
-            from src.mcp_server.tools.get_rate_table import get_rate_table
+            from src.mcp_server.tools.get_rate_table import tool as get_rate_table_tool
+            from src.mcp_server.tools.get_rate_table import RateTableData
             
             for result in clause_results:
                 if result.table_refs:
                     try:
                         # 获取第一个费率表的数据
                         table_id = result.table_refs[0]
-                        rate_table = get_rate_table(table_id)
+                        # tool.run 返回的是字典
+                        try:
+                            rate_table_dict = get_rate_table_tool.run(table_id)
+                            logger.info(f"Rate table dict keys: {rate_table_dict.keys()}")
+                        except Exception as e:
+                            logger.error(f"Failed to run get_rate_table tool: {e}")
+                            rate_table_dict = {}
                         
                         # 转换为Markdown格式
-                        if rate_table and rate_table.table_data:
+                        if rate_table_dict:
                             md_lines = ["## 费率表数据\n"]
                             
                             # 表头
-                            headers = rate_table.table_data.headers
+                            headers = rate_table_dict.get('headers', [])
                             md_lines.append("| " + " | ".join(headers) + " |")
                             md_lines.append("| " + " | ".join(["---"] * len(headers)) + " |")
                             
                             # 表格数据
-                            for row in rate_table.table_data.rows[:20]:  # 最多显示20行
+                            rows = rate_table_dict.get('rows', [])
+                            for row in rows:
                                 md_lines.append("| " + " | ".join(str(cell) for cell in row) + " |")
-                            
-                            if len(rate_table.table_data.rows) > 20:
-                                md_lines.append(f"\n*(...还有{len(rate_table.table_data.rows) - 20}行数据)*")
                             
                             result.rate_table_content = "\n".join(md_lines)
                             logger.info(f"已为chunk {result.chunk_id[:8]}自动获取费率表数据")
